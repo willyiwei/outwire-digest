@@ -2,8 +2,8 @@ name: Weekly AI Security Digest
 
 on:
   schedule:
-    - cron: '0 14 * * 1'   # Every Monday at 6 AM PST (14:00 UTC)
-  workflow_dispatch:          # Manual trigger for testing
+    - cron: "0 14 * * 1" # Every Monday at 6 AM PST (14:00 UTC)
+  workflow_dispatch: # Manual trigger for testing
 
 permissions:
   contents: write
@@ -29,7 +29,7 @@ jobs:
           SUBSTACK_SID: ${{ secrets.SUBSTACK_SID }}
           GMAIL_USERNAME: ${{ secrets.GMAIL_USERNAME }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: uv run python -m outwire.main --publish
+        run: uv run python -m outwire.main --publish --no-email
 
       - name: Commit updated state
         run: |
