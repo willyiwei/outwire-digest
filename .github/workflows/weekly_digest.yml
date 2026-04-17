@@ -46,3 +46,4 @@ jobs:
           name: digest-${{ github.run_id }}
           path: output/
           retention-days: 30
+          if-no-files-found: ignore

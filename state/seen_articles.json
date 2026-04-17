@@ -1,26 +1,5 @@
 {
-  "last_run": "2026-04-17T03:48:35.241518+00:00",
-  "seen_ids": [
-    "767bb8b2f53d4e16",
-    "44c843c735d9745a",
-    "31d32e7a19ea150e",
-    "63997fa6a54fc073",
-    "2f44f3cb878e46f1",
-    "475d0423a96174b7",
-    "9aa5b5c766fa2e0e",
-    "127370928355023a",
-    "b73c71af5f501c54",
-    "485ee17397254117",
-    "db223c2f496fbc1f",
-    "a523091a85fcf8bc",
-    "3192390f8d2df38e",
-    "6af6058153e27ccb",
-    "43bc8825f8121ef8",
-    "208cf90b630265bb",
-    "3e8561129b9c2de0",
-    "9ee07a5af1b7d7aa",
-    "fd8319d143a6f3eb",
-    "39efb6a95f78ce83"
-  ],
-  "last_issue_number": 1
+  "last_run": null,
+  "seen_ids": [],
+  "last_issue_number": 0
 }
