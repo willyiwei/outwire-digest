@@ -54,7 +54,17 @@ def _score_one(
     return ScoredArticle(article=article, score=score, score_reason=reason)
 
 
-_CONCURRENCY = 8  # parallel Haiku calls
+_CONCURRENCY = 4  # parallel Haiku calls — conservative for CI environments
+
+import threading
+_local = threading.local()
+
+
+def _get_client(api_key: str) -> anthropic.Anthropic:
+    """One client per thread to avoid connection pool contention."""
+    if not hasattr(_local, "client"):
+        _local.client = anthropic.Anthropic(api_key=api_key, timeout=60.0)
+    return _local.client
 
 
 def score_articles(
@@ -65,14 +75,17 @@ def score_articles(
 ) -> list[ScoredArticle]:
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
-    client = anthropic.Anthropic(api_key=api_key)
     system = [{"type": "text", "text": load_scoring_prompt(), "cache_control": {"type": "ephemeral"}}]
+
+    def _score_with_local_client(article: RawArticle) -> ScoredArticle:
+        client = _get_client(api_key)
+        return _score_one(client, system, article)
 
     scored: list[ScoredArticle] = []
     completed = 0
 
     with ThreadPoolExecutor(max_workers=_CONCURRENCY) as pool:
-        futures = {pool.submit(_score_one, client, system, a): a for a in articles}
+        futures = {pool.submit(_score_with_local_client, a): a for a in articles}
         for future in as_completed(futures):
             article = futures[future]
             completed += 1
