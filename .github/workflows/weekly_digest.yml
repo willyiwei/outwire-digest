@@ -27,7 +27,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          echo "=== HTTP response (no -f, shows errors) ==="
+          echo "=== HTTP response ==="
           curl -s --max-time 10 https://api.anthropic.com/v1/models \
             -H "x-api-key: $ANTHROPIC_API_KEY" \
             -H "anthropic-version: 2023-06-01" \
@@ -36,16 +36,7 @@ jobs:
           echo "=== Proxy env ==="
           echo "http_proxy=$http_proxy https_proxy=$https_proxy no_proxy=$no_proxy"
           echo "=== Python SDK test ==="
-          uv run python -c "
-import anthropic, os
-client = anthropic.Anthropic(api_key=os.environ['ANTHROPIC_API_KEY'])
-try:
-    msg = client.messages.create(model='claude-haiku-4-5-20251001', max_tokens=10,
-        messages=[{'role':'user','content':'hi'}])
-    print('SDK OK:', msg.content[0].text)
-except Exception as e:
-    import traceback; traceback.print_exc()
-"
+          uv run python scripts/test_api.py
 
       - name: Run digest pipeline
         env:
