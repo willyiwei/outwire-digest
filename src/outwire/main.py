@@ -15,7 +15,8 @@ _OUTPUT_DIR = Path(__file__).parents[2] / "output"
 
 
 def _week_date() -> str:
-    return datetime.now().strftime("%B %d, %Y")
+    from datetime import timezone
+    return datetime.now(timezone.utc).strftime("%B %d, %Y")
 
 
 _LAST_MD = _OUTPUT_DIR / "last_digest.md"
