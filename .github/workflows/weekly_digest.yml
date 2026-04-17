@@ -1,0 +1,48 @@
+name: Weekly AI Security Digest
+
+on:
+  schedule:
+    - cron: '0 14 * * 1'   # Every Monday at 6 AM PST (14:00 UTC)
+  workflow_dispatch:          # Manual trigger for testing
+
+permissions:
+  contents: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run digest pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUBSTACK_SID: ${{ secrets.SUBSTACK_SID }}
+          GMAIL_USERNAME: ${{ secrets.GMAIL_USERNAME }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: uv run python -m outwire.main --publish
+
+      - name: Commit updated state
+        run: |
+          git config user.name "outwire-bot"
+          git config user.email "actions@github.com"
+          git add state/seen_articles.json
+          git diff --staged --quiet || git commit -m "chore: update seen articles state [skip ci]"
+          git push
+
+      - name: Upload digest artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-${{ github.run_id }}
+          path: output/
+          retention-days: 30
