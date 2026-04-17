@@ -63,6 +63,12 @@ def markdown_to_tiptap(md: str) -> str:
             })
         elif stripped == "---":
             content.append({"type": "horizontalRule"})
+        elif stripped.startswith("> "):
+            # Blockquote — used for "Take" commentary
+            content.append({
+                "type": "blockquote",
+                "content": [{"type": "paragraph", "content": _parse_inline(stripped[2:])}],
+            })
         elif stripped.startswith("*") and stripped.endswith("*") and not stripped.startswith("**"):
             content.append({
                 "type": "paragraph",
