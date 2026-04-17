@@ -94,7 +94,8 @@ def score_articles(
                 scored.append(result)
                 log.info("score", n=completed, total=len(articles), score=result.score, title=article.title[:50])
             except Exception as exc:
-                log.warning("score_failed", title=article.title[:50], error=str(exc))
+                cause = getattr(exc, "__cause__", None) or getattr(exc, "__context__", None)
+                log.warning("score_failed", title=article.title[:50], error=str(exc), cause=str(cause) if cause else None)
 
     filtered = [s for s in scored if s.score >= min_score]
     filtered.sort(key=lambda s: s.score, reverse=True)

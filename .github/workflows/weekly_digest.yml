@@ -23,6 +23,17 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
+      - name: Test Anthropic API connectivity
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "=== DNS check ==="
+          nslookup api.anthropic.com || true
+          echo "=== HTTPS connectivity ==="
+          curl -sf --max-time 10 https://api.anthropic.com/v1/models \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" | head -c 200 || echo "curl exit: $?"
+
       - name: Run digest pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
