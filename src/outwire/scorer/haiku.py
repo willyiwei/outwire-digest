@@ -54,23 +54,34 @@ def _score_one(
     return ScoredArticle(article=article, score=score, score_reason=reason)
 
 
+_CONCURRENCY = 8  # parallel Haiku calls
+
+
 def score_articles(
     articles: list[RawArticle],
     api_key: str,
     min_score: int = 6,
     top_k: int = 20,
 ) -> list[ScoredArticle]:
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
     client = anthropic.Anthropic(api_key=api_key)
     system = [{"type": "text", "text": load_scoring_prompt(), "cache_control": {"type": "ephemeral"}}]
 
     scored: list[ScoredArticle] = []
-    for i, article in enumerate(articles):
-        try:
-            result = _score_one(client, system, article)
-            scored.append(result)
-            log.info("score", n=i + 1, total=len(articles), score=result.score, title=article.title[:50])
-        except Exception as exc:
-            log.warning("score_failed", title=article.title[:50], error=str(exc))
+    completed = 0
+
+    with ThreadPoolExecutor(max_workers=_CONCURRENCY) as pool:
+        futures = {pool.submit(_score_one, client, system, a): a for a in articles}
+        for future in as_completed(futures):
+            article = futures[future]
+            completed += 1
+            try:
+                result = future.result()
+                scored.append(result)
+                log.info("score", n=completed, total=len(articles), score=result.score, title=article.title[:50])
+            except Exception as exc:
+                log.warning("score_failed", title=article.title[:50], error=str(exc))
 
     filtered = [s for s in scored if s.score >= min_score]
     filtered.sort(key=lambda s: s.score, reverse=True)
