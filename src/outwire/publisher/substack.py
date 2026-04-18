@@ -30,6 +30,8 @@ class SubstackClient:
             "draft_bylines": [],
         }
         resp = self._client.post(f"{_BASE}/api/v1/drafts", json=payload)
+        if not resp.is_success:
+            log.error("substack_http_error", status=resp.status_code, body=resp.text[:300])
         resp.raise_for_status()
         draft_id = str(resp.json()["id"])
         log.info("draft_created", draft_id=draft_id, title=title)
