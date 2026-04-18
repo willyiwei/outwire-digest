@@ -23,35 +23,17 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Test Anthropic API connectivity
+      - name: Generate digest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          echo "=== HTTP response ==="
-          curl -s --max-time 10 https://api.anthropic.com/v1/models \
-            -H "x-api-key: $ANTHROPIC_API_KEY" \
-            -H "anthropic-version: 2023-06-01" \
-            -w "\nHTTP_STATUS:%{http_code}" | tail -c 300
-          echo ""
-          echo "=== Proxy env ==="
-          echo "http_proxy=$http_proxy https_proxy=$https_proxy no_proxy=$no_proxy"
-          echo "=== Python SDK test ==="
-          uv run python scripts/test_api.py
+        run: uv run python -m outwire.main --dry-run
 
-      - name: Run digest pipeline
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SUBSTACK_SID: ${{ secrets.SUBSTACK_SID }}
-          GMAIL_USERNAME: ${{ secrets.GMAIL_USERNAME }}
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: uv run python -m outwire.main --publish --no-email
-
-      - name: Commit updated state
+      - name: Commit digest and state
         run: |
           git config user.name "outwire-bot"
           git config user.email "actions@github.com"
-          git add state/seen_articles.json
-          git diff --staged --quiet || git commit -m "chore: update seen articles state [skip ci]"
+          git add state/seen_articles.json output/last_digest.md output/last_digest.html
+          git diff --staged --quiet || git commit -m "chore: weekly digest generated [skip ci]"
           git push
 
       - name: Upload digest artifact
@@ -59,6 +41,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: digest-${{ github.run_id }}
-          path: output/
+          path: output/last_digest.md
           retention-days: 30
           if-no-files-found: ignore

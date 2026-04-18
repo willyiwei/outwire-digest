@@ -7,5 +7,6 @@ __pycache__/
 .ruff_cache/
 dist/
 *.egg-info/
-output/
+output/*.html
+output/issue_*.md
 .DS_Store
