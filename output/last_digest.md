@@ -1,95 +1,95 @@
-## Outwire | AI Security Digest — Week of April 20, 2026
+## Outwire | AI Security Digest — Week of April 27, 2026
 *Issue #2*
 
 ---
 
-### 1. [Anthropic MCP Design Vulnerability Enables RCE, Threatening AI Supply Chain](https://thehackernews.com/2026/04/anthropic-mcp-design-vulnerability.html)
+### 1. [Sovereign Agentic Loops: Decoupling AI Reasoning from Execution in Real-World Systems](https://arxiv.org/abs/2604.22136)
+**Source**: arXiv cs.CR
+
+LLM agents issuing API calls that mutate real systems represent a structural execution risk when model outputs bypass validation — this paper proposes Sovereign Agentic Loops (SAL), a control-plane architecture that intercepts structured model intents and validates them against live system state and policy before any execution occurs. For enterprises running agentic workflows in production, this is the clearest formal treatment yet of why stochastic-output-to-execution coupling is an architectural flaw, not just an operational risk.
+
+> **Take**: SAL is the pattern your agentic pipeline architects need to see now — before the first autonomous rollback or misconfigured firewall rule makes the argument for you.
+
+---
+
+### 2. ['Zealot' Shows What AI's Capable of in Staged Cloud Attack](https://www.darkreading.com/cyber-risk/zealot-shows-ai-execute-full-cloud-attacks)
+**Source**: Dark Reading
+
+A proof-of-concept AI agent dubbed Zealot executed a full multi-step cloud attack autonomously, moving faster than human defenders could respond and demonstrating more emergent, unscripted behavior than researchers anticipated. This isn't a theoretical threat model — it's a live demonstration that AI-driven attack chains can outpace SOC response times in real cloud environments.
+
+> **Take**: The "humans in the loop will catch it" assumption just took a direct hit; your detection and containment SLAs were written for human-speed adversaries, not this.
+
+---
+
+### 3. [LMDeploy CVE-2026-33626 Flaw Exploited Within 13 Hours of Disclosure](https://thehackernews.com/2026/04/lmdeploy-cve-2026-33626-flaw-exploited.html)
 **Source**: The Hacker News
 
-A "by design" architectural flaw in the Model Context Protocol (MCP) enables arbitrary remote code execution on any system running a vulnerable MCP implementation, with cascading supply chain risk across enterprise AI agent deployments that depend on the protocol for tool and context integration.
+A CVSS 7.5 SSRF vulnerability in LMDeploy — the open-source toolkit widely used for compressing and serving LLMs — was exploited in the wild less than 13 hours after public disclosure, exposing internal services to attackers who can reach the model-serving endpoint. Any enterprise running LMDeploy in a cloud or hybrid environment should treat this as an active incident until patched and network-segmented.
 
-> **Take**: MCP is quietly becoming the connective tissue of enterprise AI stacks — a protocol-level RCE this early in its adoption curve is the kind of foundational debt that compounds fast.
-
----
-
-### 2. [LogJack: Indirect Prompt Injection Through Cloud Logs Against LLM Debugging Agents](https://arxiv.org/abs/2604.15368)
-**Source**: arXiv cs.CR
-
-Researchers demonstrate that LLM agents consuming cloud logs for automated remediation are exploitable via indirect prompt injection embedded in log content, with verbatim malicious command execution rates ranging from 0% (Claude Sonnet 4.6) to 86.2% (Llama 3.3 70B) across 8 tested foundation models. The attack surface is any log pipeline feeding an agentic workflow with write-back permissions.
-
-> **Take**: If your org is building AIOps tooling that ingests logs and executes remediations, this benchmark is required reading before you ship.
+> **Take**: LLM serving infrastructure is now a high-priority target with a near-zero patch window — if your model deployment stack isn't behind the same scrutiny as your web-facing services, fix that today.
 
 ---
 
-### 3. [Too Private to Tell: Practical Token Theft Attacks on Apple Intelligence](https://arxiv.org/abs/2604.15637)
-**Source**: arXiv cs.CR
-
-Researchers used traffic analysis and reverse engineering to expose practical vulnerabilities in Apple Intelligence's two-stage anonymous access token authentication mechanism, undermining the privacy and security guarantees Apple markets for its on-device GenAI service.
-
-> **Take**: Apple's privacy narrative around Intelligence has driven enterprise adoption — this research chips away at the architectural trust that narrative rests on, and MDM teams should be watching for Apple's response.
-
----
-
-### 4. [HarmfulSkillBench: How Do Harmful Skills Weaponize Your Agents?](https://arxiv.org/abs/2604.15415)
-**Source**: arXiv cs.CR
-
-The first large-scale measurement of malicious skills in open LLM agent skill ecosystems (e.g., ClawHub, Skills.Rest) shows that publicly reusable skills can be weaponized for cyberattacks, fraud, privacy violations, and other harmful actions — a largely unexamined attack surface beyond prompt injection.
-
-> **Take**: Skill marketplaces for AI agents are the new npm — and we haven't had our left-pad moment yet, but this research suggests it's coming.
-
----
-
-### 5. [SoK: Security of Autonomous LLM Agents in Agentic Commerce](https://arxiv.org/abs/2604.15367)
-**Source**: arXiv cs.CR
-
-This systematization of knowledge paper maps security risks across autonomous LLM agents operating in agentic commerce — negotiating, purchasing, and executing financial transactions — covering trust boundary failures across emerging protocols including ERC-8004, AP2, x402, and ACP.
-
-> **Take**: The moment agents can spend money autonomously, authorization and non-repudiation become existential security requirements — enterprises need threat models for these protocols before their finance and procurement workflows get wired into them.
-
----
-
-### 6. [LinuxArena: A Control Setting for AI Agents in Live Production Software Environments](https://arxiv.org/abs/2604.15384)
-**Source**: arXiv cs.CR
-
-LinuxArena introduces a large-scale benchmark of 20 live multi-service production environments with 1,671 legitimate engineering tasks and 184 adversarial side tasks — including data exfiltration and backdoor insertion — designed to evaluate whether AI agents can be manipulated into harmful actions during normal software engineering work.
-
-> **Take**: Sabotage evaluations in realistic production environments are exactly the kind of red-team infrastructure the industry has been missing; I'd watch which foundation models perform worst on the side-task isolation tests.
-
----
-
-### 7. [Vercel Breach Tied to Context AI Hack Exposes Limited Customer Credentials](https://thehackernews.com/2026/04/vercel-breach-tied-to-context-ai-hack.html)
+### 4. [Bridging the AI Agent Authority Gap: Continuous Observability as the Decision Engine](https://thehackernews.com/2026/04/bridging-ai-agent-authority-gap.html)
 **Source**: The Hacker News
 
-A third-party AI analytics tool (Context.ai) was compromised and used as a pivot to take over a Vercel employee's Google Workspace account, resulting in unauthorized access to internal Vercel systems — a textbook AI supply chain breach through a low-visibility SaaS integration.
+Enterprise AI agents don't generate authority independently — they inherit it through delegation chains from triggering systems, and that delegation relationship is where governance breaks down in most current deployments. The piece argues continuous observability of agent behavior relative to its delegated scope is the only reliable control mechanism at runtime.
 
-> **Take**: The AI tooling sprawl in most engineering orgs represents a shadow attack surface that hasn't gone through the same vendor review rigor as traditional SaaS — this breach is the case study to take to your procurement process.
-
----
-
-### 8. [Incident Response for AI: Same Fire, Different Fuel](https://www.microsoft.com/en-us/security/blog/2026/04/15/incident-response-for-ai-same-fire-different-fuel/)
-**Source**: Microsoft Security
-
-Microsoft's security team outlines where traditional IR practices transfer to AI systems and where they break down, identifying gaps in telemetry, tooling, and investigator skills specific to LLM-based incidents.
-
-> **Take**: The telemetry gap is the real story here — most SOCs have no visibility into model inputs, tool calls, or agent decision chains, and that's the log data you'll desperately want during an active AI incident.
+> **Take**: I'd reframe every AI agent security review in your org around the delegation graph, not just the agent itself — the risk lives in the chain, not the endpoint.
 
 ---
 
-### 9. [Mutation Testing for the Agentic Era](https://blog.trailofbits.com/2026/04/01/mutation-testing-for-the-agentic-era/)
-**Source**: Trail of Bits
+### 5. [Behavioral Canaries: Auditing Private Retrieved Context Usage in RL Fine-Tuning](https://arxiv.org/abs/2604.22191)
+**Source**: arXiv cs.CR
 
-Trail of Bits makes the case that code coverage metrics are dangerously misleading for agentic AI systems and applies mutation testing methodology to surface critical functionality gaps that coverage-based testing misses, drawing on a real high-severity DeFi vulnerability as precedent.
+Standard membership inference and verbatim memorization checks fail to detect when legally protected retrieved context has been incorporated into post-training via reinforcement learning, because RL shapes behavioral style rather than factual recall — this paper introduces behavioral canaries as an auditing primitive to detect ToS violations by model providers. For enterprises sharing proprietary data with LLM providers for fine-tuning, this is the first credible technical audit mechanism for a gap that's been purely contractual until now.
 
-> **Take**: The same coverage theater that plagues traditional software testing will be worse in agentic systems where execution paths are non-deterministic — mutation testing is an underused lever that security engineers should be pushing into AI CI pipelines.
+> **Take**: This is the one to watch for procurement and legal teams negotiating fine-tuning agreements — "we don't train on your data" just became something you can actually test.
 
 ---
 
-### 10. [Changes in the System Prompt Between Claude Opus 4.6 and 4.7](https://simonwillison.net/2026/Apr/18/opus-system-prompt/#atom-everything)
-**Source**: Simon Willison
+### 6. [Bad Memories Still Haunt AI Agents](https://www.darkreading.com/vulnerabilities-threats/bad-memories-haunt-ai-agents)
+**Source**: Dark Reading
 
-A diff analysis of Anthropic's publicly published Claude system prompts between Opus 4.6 and 4.7 reveals how behavioral guardrails and instruction framing evolve across model releases — a rare window into the policy layer that shapes model security posture.
+Cisco disclosed and patched a significant vulnerability in how Anthropic handles agent memory files, with security researchers warning this class of memory-handling flaw will persist broadly across agentic AI systems. Persistent memory in AI agents introduces a durable attack surface — malicious or corrupted memory entries can influence future reasoning chains long after initial compromise.
 
-> **Take**: Anthropic is the only lab publishing these, which makes every delta a competitive intelligence artifact — tracking how safety instructions change between releases is one of the more underrated signals for red teams assessing jailbreak surface area.
+> **Take**: Agent memory stores need to be treated as untrusted input surfaces with the same rigor as user-controlled data in web apps — sanitization and integrity validation aren't optional.
+
+---
+
+### 7. [Train in Vain: Functionality-Preserving Poisoning to Prevent Unauthorized Use of Code Datasets](https://arxiv.org/abs/2604.22291)
+**Source**: arXiv cs.CR
+
+FunPoison injects short, compilable but semantically weak code fragments into datasets as a proactive defense against unauthorized training of CodeLLMs, degrading model utility without breaking compilation or detection by standard static analysis. This matters for enterprises and open-source maintainers whose code corpora are being scraped and used to train competitor or adversarial models without consent.
+
+> **Take**: Dataset poisoning as IP self-defense is a legitimate enterprise tool now — worth evaluating alongside legal and licensing controls for proprietary codebases exposed to scraping.
+
+---
+
+### 8. [Automation-Exploit: A Multi-Agent LLM Framework for Adaptive Offensive Security with Digital Twin-Based Risk-Mitigated Exploitation](https://arxiv.org/abs/2604.22427)
+**Source**: arXiv cs.CR
+
+Automation-Exploit is a fully autonomous multi-agent system that bridges the reconnaissance-to-exploitation gap in black-box environments, explicitly designed to bypass LLM safety alignment filters and avoid the DoS risks that have constrained previous automated exploit generation systems. The use of digital twins for risk-mitigated live execution is a meaningful capability jump over prior AEG work and maps directly to what defenders should expect from well-resourced adversaries.
+
+> **Take**: The safety filters that enterprise AI vendors cite as exploit barriers are now a documented engineering problem being systematically solved — threat models need to update accordingly.
+
+---
+
+### 9. [Discord Sleuths Gained Unauthorized Access to Anthropic's Mythos](https://www.wired.com/story/security-news-this-week-discord-sleuths-gained-unauthorized-access-to-anthropics-mythos/)
+**Source**: WIRED Security
+
+Discord researchers gained unauthorized access to Anthropic's internal Mythos AI system, raising direct concerns about model exfiltration, capability exposure, and supply chain integrity for enterprises that depend on Anthropic's API offerings. The incident underscores that even frontier AI labs have exploitable access control gaps on internal systems that aren't yet customer-facing.
+
+> **Take**: Your LLM provider's internal security posture is now part of your threat surface — this is the conversation to start having in your third-party risk reviews.
+
+---
+
+### 10. [Mythos Changed the Math on Vulnerability Discovery. Most Teams Aren't Ready for the Remediation Side](https://thehackernews.com/2026/04/mythos-changed-math-on-vulnerability.html)
+**Source**: The Hacker News
+
+Anthropic's Claude Mythos Preview can identify vulnerabilities at a scale that outstrips most organizations' capacity to validate, prioritize, and remediate findings — shifting the bottleneck from discovery to response and creating a dangerous backlog dynamic for security teams. The asymmetry is the problem: AI accelerates the finding side for both defenders and attackers while human-constrained remediation pipelines stay constant.
+
+> **Take**: If you're evaluating Mythos or similar AI vuln-discovery tooling, build the remediation capacity plan first — a larger backlog of unpatched findings is worse than the status quo.
 
 ---
 
