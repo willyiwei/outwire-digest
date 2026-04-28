@@ -97,16 +97,16 @@ def run(cfg: Config, publish: bool = False, no_llm: bool = False, reuse_last: bo
 
     _save_output(digest_md, digest_html, issue_number)
 
+    # Save state after every successful generation (not just after publish)
+    new_ids = [a.article.id for a in scored]
+    save_state(new_ids, issue_number)
+
     if cfg.dry_run or not publish:
         log.info("dry_run_complete", issue=issue_number)
         print(digest_md)
         return
 
     _publish(cfg, digest_html, issue_number, week)
-
-    # 6. Save state
-    new_ids = [a.article.id for a in scored]
-    save_state(new_ids, issue_number)
 
 
 def _publish(cfg: Config, digest_html: str, issue_number: int, week: str) -> None:
