@@ -44,7 +44,10 @@ def run(cfg: Config, publish: bool = False, no_llm: bool = False, reuse_last: bo
     from outwire.collector.rss import collect_all
 
     seen_ids = get_seen_ids()
-    issue_number = get_last_issue_number() + 1
+    last_issue = get_last_issue_number()
+    # --reuse-last: CI already incremented and saved the issue number during generation,
+    # so use last_issue directly. Fresh generation increments by 1.
+    issue_number = last_issue if reuse_last else last_issue + 1
     week = _week_date()
 
     log.info("pipeline_start", issue=issue_number, week=week, dry_run=cfg.dry_run, reuse_last=reuse_last)
