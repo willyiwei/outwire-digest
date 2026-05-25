@@ -1,95 +1,95 @@
-## Outwire | AI Security Digest — Week of May 18, 2026
-*Issue #6*
+## Outwire | AI Security Digest — Week of May 25, 2026
+*Issue #7*
 
 ---
 
-### 1. [Hidden in Memory: Sleeper Memory Poisoning in LLM Agents](https://arxiv.org/abs/2605.15338)
+### 1. [The Misattribution Gap: When Memory Poisoning Looks Like Model Failure in Agentic AI Systems](https://arxiv.org/abs/2605.22842)
 **Source**: arXiv cs.CR
 
-Researchers demonstrate a delayed attack vector against stateful LLM agents: adversarial content embedded in documents, webpages, or repositories causes the assistant to write fabricated memories that persist across sessions and silently corrupt future interactions. Unlike prompt injection, this attack survives the original context and compounds over time — a critical distinction for any enterprise deploying persistent-memory agents.
+Researchers formalize the "Misattribution Gap" in multi-agent pipelines: memory-layer attacks that inject policy-formatted documents into shared vector stores produce behavioral drift (Semantic Norm Drift) that is structurally indistinguishable from model misalignment, causing defenders to remediate the wrong layer. This means existing model-focused monitoring and retraining responses are blind to an entire attack class operating below them in the stack.
 
-> **Take**: Persistent memory is the feature that turns a useful assistant into a persistent attack surface, and most enterprise deployments aren't logging or auditing what gets written to memory stores — fix that before you expand agent rollouts.
+> **Take**: If your agentic incident response playbook treats all misbehavior as a model problem, you're almost certainly going to burn cycles retraining clean models while the poisoned memory store sits untouched — audit your shared vector stores as first-class attack surfaces.
 
 ---
 
-### 2. [Compositional Jailbreaking: An Empirical Analysis of Mutator Chain Interactions in Aligned LLMs](https://arxiv.org/abs/2605.15598)
+### 2. [Prompt Overflow: What the Guardrail Inspects Is Not What the Model Infers](https://arxiv.org/abs/2605.23196)
 **Source**: arXiv cs.CR
 
-Researchers systematically studied chaining weak jailbreak transformations in sequence, finding that individually ineffective mutations can combine to reliably bypass safety alignment in deployed LLMs. The implication for enterprise AI deployments is that guardrail testing against known single-technique jailbreaks is insufficient if you haven't evaluated compositional attack chains.
+Guardrail models that truncate or segment overlength prompts before inspection create a structural mismatch: the safety checker evaluates a different token sequence than the LLM actually processes, enabling prompt injection payloads to survive screening by exploiting that gap. This effectively turns a fundamental input-handling constraint into a bypass primitive against the primary enterprise defense layer.
 
-> **Take**: Red-teaming your aligned model against individual techniques and calling it done is now a false assurance — your next evaluation cycle needs multi-step mutation chains in scope.
+> **Take**: Guardrails built on truncation-based inspection are architecturally broken against adversarial long inputs — I'd treat any deployment where max context differs between the safety checker and the downstream model as an open vulnerability until proven otherwise.
 
 ---
 
-### 3. [How Dangerous Is Anthropic's Mythos AI?](https://www.schneier.com/blog/archives/2026/05/how-dangerous-is-anthropics-mythos-ai.html)
+### 3. [Introducing RAMPART and Clarity: Open source tools to bring safety into Agent development workflow](https://www.microsoft.com/en-us/security/blog/2026/05/20/introducing-rampart-and-clarity-open-source-tools-to-bring-safety-into-agent-development-workflow/)
+**Source**: Microsoft Security
+
+Microsoft released RAMPART and Clarity as open-source tools targeting safety gaps in production AI agents that execute code, access email and CRM systems, and take actions across connected enterprise infrastructure — a direct acknowledgment that current development workflows ship agents without adequate security instrumentation. These aren't research prototypes; they're positioned as developer-workflow integrations.
+
+> **Take**: This is the one to actually evaluate this sprint — Microsoft shipping open-source tooling here signals they're seeing enough unsafe agent deployments in enterprise telemetry to justify the investment, and that's a threat model signal worth taking seriously.
+
+---
+
+### 4. [PoisonForge: Task-Level Targeted Poisoning Benchmark for Instruction-Tuned LLMs](https://arxiv.org/abs/2605.23168)
+**Source**: arXiv cs.CR
+
+PoisonForge demonstrates that an adversary can insert a small number of crafted instruction-response pairs into fine-tuning datasets to cause targeted behavioral corruption on specific task families across 12 open-weight models, while the model behaves normally elsewhere — a supply chain attack against the fine-tuning pipeline that evades broad behavioral testing. The benchmark parameterizes the attack along four dimensions, giving defenders a concrete threat model to test against.
+
+> **Take**: Any team fine-tuning on unvetted datasets — Hugging Face pulls, third-party instruction sets, contractor-curated data — should be running PoisonForge-class evaluations before promoting models to production; dataset provenance is now a security control, not just a quality concern.
+
+---
+
+### 5. [What Does the Server See? Understanding Privacy Leakage from Large Language Models in Split Inference](https://arxiv.org/abs/2605.23158)
+**Source**: arXiv cs.CR
+
+Researchers introduce ActInv, an attack that reconstructs client-side input from intermediate activations transmitted during split inference LLM deployments — breaking the core privacy assumption that motivated the architecture in the first place. Enterprises deploying split inference to keep sensitive prompts off cloud infrastructure are exposed if the server-side component is compromised or adversarial.
+
+> **Take**: Split inference was being sold as a privacy-preserving compromise for regulated industries; ActInv demonstrates it's a threat model, not a control — factor this into any on-prem/cloud hybrid LLM deployment design.
+
+---
+
+### 6. [CachePrune: Privacy-Aware and Fine-Grained KV Cache Sharing for Efficient LLM Inference](https://arxiv.org/abs/2605.23640)
+**Source**: arXiv cs.CR
+
+Cross-user KV cache sharing in LLM serving infrastructure introduces a side-channel that allows adversaries to infer other users' inputs by probing cache reuse patterns; CachePrune proposes fine-grained cache partitioning as a defense that preserves performance without disabling sharing entirely. This is a production infrastructure vulnerability, not a theoretical one — any multi-tenant LLM serving stack is potentially affected.
+
+> **Take**: If you're running a shared LLM inference layer across internal teams or customers, validate your serving framework's cache isolation model now — this side-channel is the kind of low-visibility data leak that won't show up in application logs.
+
+---
+
+### 7. [Beyond Zero: Enterprise Security for the AI Era](https://arxiv.org/abs/2605.22985)
+**Source**: arXiv cs.CR
+
+This paper argues that zero trust's application-level trust boundary is insufficient for autonomous AI agents operating at machine speed across corporate data, and proposes "Beyond Zero" — a per-resource, per-method authorization model that combines static policy guarantees with dynamic AI-driven reasoning to shrink the blast radius of agent actions. The architecture targets the gap where agents inherit broad application-level permissions rather than operating under fine-grained, action-scoped controls.
+
+> **Take**: The framing is right even if the implementation is academic — the enterprise identity teams I'd worry about are the ones still thinking about agent permissions as a role assignment problem rather than an action authorization problem.
+
+---
+
+### 8. [A Hacker Group Is Poisoning Open Source Code at an Unprecedented Scale](https://www.wired.com/story/teampcp-software-supply-chain-attack-spree-github/)
+**Source**: WIRED Security
+
+TeamPCP has executed a systematic supply chain poisoning campaign across hundreds of organizations through GitHub and multiple package ecosystems, with confirmed impact on a Microsoft-published Python SDK and AI/ML adjacent tooling in the dependency graph. The scale and cross-ecosystem reach represent a qualitative escalation from previous supply chain campaigns.
+
+> **Take**: With TeamPCP now confirmed hitting Python SDKs and AI tooling dependencies, any enterprise ingesting open-source packages into an AI/ML pipeline without hash-pinning and provenance verification is carrying unquantified exposure right now.
+
+---
+
+### 9. [We hardened zizmor's GitHub Actions static analyzer](https://blog.trailofbits.com/2026/05/22/we-hardened-zizmors-github-actions-static-analyzer/)
+**Source**: Trail of Bits
+
+A `pull_request_target` misconfiguration in `aquasecurity/trivy-action` was exploited to exfiltrate secrets and backdoor LiteLLM on PyPI — a concrete AI tooling supply chain compromise via CI/CD pipeline — with Trail of Bits subsequently hardening zizmor to detect the class of misconfiguration that made it possible. LiteLLM is widely deployed in enterprise LLM routing infrastructure.
+
+> **Take**: If LiteLLM is in your stack and you haven't verified the integrity of your pinned version against the pre-compromise state, that's the first thing to check before anything else this week.
+
+---
+
+### 10. [On AI Security](https://www.schneier.com/blog/archives/2026/05/on-ai-security.html)
 **Source**: Schneier on Security
 
-Anthropic restricted Claude Mythos Preview from general release due to its exceptional capability at finding software vulnerabilities, instead making it available only to a vetted group for defensive scanning — an unprecedented vendor-imposed capability gate on an AI model. Schneier contextualizes what this restriction signals about the actual offensive potential and what it means when a lab self-censors a product rather than shipping it.
+The referenced Berryville IML report argues that AI security cannot be validated by maximizing benchmark scores — because security and privacy are emergent systemic properties that benchmarks structurally cannot measure — and traces why 30 years of software security engineering methods don't transfer cleanly to ML systems. This is a foundational framing problem that affects how enterprises are currently auditing and certifying AI deployments.
 
-> **Take**: A vendor voluntarily withholding a model from general availability is a more meaningful capability signal than any benchmark — treat it as a forcing function to audit what vulnerabilities in your own codebase you haven't found yet.
-
----
-
-### 4. [OpenAI's GPT-5.5 is as Good as Mythos at Finding Security Vulnerabilities](https://www.schneier.com/blog/archives/2026/05/openais-gpt-5-5-is-as-good-as-mythos-at-finding-security-vulnerabilities.html)
-**Source**: Schneier on Security
-
-The UK AI Security Institute evaluated GPT-5.5's vulnerability-discovery capabilities and found them comparable to Anthropic's restricted Mythos model — and GPT-5.5 is generally available to anyone. This means the offensive capability Anthropic chose to gate is already accessible through a competing, widely-deployed model.
-
-> **Take**: The restricted-access guardrail Anthropic built around Mythos is strategically irrelevant if the same capability ships in GPT-5.5 via API — the threat model for AI-assisted exploitation just became everyone's problem, not just Anthropic customers'.
-
----
-
-### 5. [The Boring Stuff is Dangerous Now](https://www.darkreading.com/cyber-risk/ai-code-and-agents-forces-defenders-adapt)
-**Source**: Dark Reading
-
-AI agents are autonomously discovering and exploiting obscure vulnerability classes at the same time that AI-generated code is flooding production systems with novel flaws — defenders face both an accelerated attack cycle and a larger, lower-quality attack surface simultaneously. The compounding effect demands architectural rethinking of detection and response, not incremental tuning.
-
-> **Take**: The asymmetry here is the real problem: AI-generated code ships at developer speed but gets reviewed at human speed — close that gap or accept that your vulnerability backlog will structurally grow faster than you can remediate.
-
----
-
-### 6. [uGen: An Agentic Framework for Generating Microarchitectural Attack PoCs](https://arxiv.org/abs/2605.15503)
-**Source**: arXiv cs.CR
-
-Researchers built an LLM-based agentic framework that automatically generates functional proof-of-concept implementations of microarchitectural attacks (e.g., cache-timing, transient execution), addressing the portability and expertise barriers that have historically limited systematic assessment of hardware-level vulnerabilities. This lowers the skill floor for generating working hardware attack code.
-
-> **Take**: Microarchitectural exploitation has been gated by deep expertise for years — LLM agents eroding that gate means your hardware attack surface needs to be in scope for AI red-team planning, not just your software stack.
-
----
-
-### 7. [TanStack Supply Chain Attack Hits Two OpenAI Employee Devices, Forces macOS Updates](https://thehackernews.com/2026/05/tanstack-supply-chain-attack-hits-two.html)
-**Source**: The Hacker News
-
-A supply chain compromise of TanStack — a widely used JavaScript library — resulted in malicious code executing on two OpenAI employee devices within the corporate environment; OpenAI confirmed no production systems, user data, or IP were accessed. The incident illustrates how developer toolchain supply chain attacks are a viable initial access vector specifically targeting AI company infrastructure.
-
-> **Take**: AI labs are high-value targets for supply chain attacks precisely because their developer environments sit adjacent to model weights and training pipelines — standard endpoint controls aren't enough if the compromise rides in on a trusted npm package.
-
----
-
-### 8. [Ivanti, Fortinet, SAP, VMware, n8n Patch RCE, SQL Injection, Privilege Escalation Flaws](https://thehackernews.com/2026/05/ivanti-fortinet-sap-vmware-n8n-patch.html)
-**Source**: The Hacker News
-
-Among a batch of critical patches this week, n8n — a workflow automation platform increasingly used as an AI agent orchestration layer — received an RCE fix, while Ivanti Xtraction (CVE-2026-8043, CVSS 9.6) carries critical information disclosure risk. RCE in an agent orchestration platform is a direct path to hijacking automated workflows with privileged system access.
-
-> **Take**: n8n RCE is the one to prioritize in this roundup — agent orchestration platforms run with broad permissions by design, and RCE there isn't just a server compromise, it's full control over every automated workflow it manages.
-
----
-
-### 9. [Rethinking the Security of DP-SGD: A Corrected Analysis of Differentially Private Machine Learning](https://arxiv.org/abs/2605.15648)
-**Source**: arXiv cs.CR
-
-Researchers identify a fundamental mismatch between the formal privacy analysis of DP-SGD and how it's actually implemented in practice, showing that the privacy guarantees enterprises believe they have from differential privacy in ML training may be weaker than claimed. This undermines a core compliance and risk management argument for DP-SGD adoption in regulated industries.
-
-> **Take**: If your data governance posture leans on DP-SGD as a training data protection guarantee, this paper deserves a read by whoever made that architectural decision — the math and the implementation may not be saying the same thing.
-
----
-
-### 10. [Enabling Adversarial Robustness in AI Models through Kubeflow MLOps](https://arxiv.org/abs/2605.15249)
-**Source**: arXiv cs.CR
-
-Researchers propose an architecture integrating Kubeflow-based MLOps pipelines with automated adversarial attack detection at inference time, triggering defense mechanisms in Kubernetes-hosted ML deployments without taking models offline. It addresses a real gap: Kubernetes provides infrastructure orchestration but has no native understanding of adversarial ML inputs.
-
-> **Take**: Inference-time adversarial detection inside the MLOps pipeline is the right architectural layer to target — I'd watch whether this approach holds up against adaptive attackers who know the defense is present.
+> **Take**: I'd send this to every team that's using benchmark pass rates as a proxy for production security assurance — the report articulates exactly why that practice creates false confidence, and it's a conversation worth forcing before the next audit cycle.
 
 ---
 
