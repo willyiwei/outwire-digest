@@ -1,95 +1,95 @@
-## Outwire | AI Security Digest — Week of May 25, 2026
-*Issue #7*
+## Outwire | AI Security Digest — Week of June 01, 2026
+*Issue #8*
 
 ---
 
-### 1. [The Misattribution Gap: When Memory Poisoning Looks Like Model Failure in Agentic AI Systems](https://arxiv.org/abs/2605.22842)
+### 1. [OpenAI Codex Authentication Tokens Stolen in codexui-android npm Supply Chain Attack](https://thehackernews.com/2026/06/openai-codex-authentication-tokens.html)
+**Source**: The Hacker News
+
+A malicious npm package named `codexui-android` — posing as a remote web UI for OpenAI Codex — has been stealing authentication tokens from developers, with 29,000 weekly downloads and the package still live on the registry. This is a direct LLM supply chain attack targeting developer environments with production AI access credentials.
+
+> **Take**: The 29K weekly download count means this has enterprise blast radius — any team using Codex in CI/CD pipelines should audit their token exposure immediately and treat this as a credential rotation event, not just a package removal.
+
+---
+
+### 2. [ChatGPhish Vulnerability Turns ChatGPT Web Summaries Into a Phishing Surface](https://thehackernews.com/2026/05/chatgphish-vulnerability-turns-chatgpt.html)
+**Source**: The Hacker News
+
+Permiso Security disclosed ChatGPhish, a technique exploiting ChatGPT's implicit trust in Markdown rendering to trigger prompt injections via embedded links and images, converting the AI's web summary responses into a phishing delivery mechanism. The chatgpt.com renderer trusts Markdown in a way that opens end users to credential harvesting without any traditional malicious attachment.
+
+> **Take**: This is the category of vulnerability that's going to keep compounding — every LLM feature that renders external content is a potential injection surface, and most enterprises haven't mapped those surfaces at all.
+
+---
+
+### 3. [Attackers Use LLM Agent for Post-Exploitation After Marimo CVE-2026-39987 Exploit](https://thehackernews.com/2026/05/attackers-use-llm-agent-for-post.html)
+**Source**: The Hacker News
+
+A threat actor exploited CVE-2026-39987 in a publicly-accessible Marimo notebook to gain initial access, then deployed an LLM agent to automate post-compromise actions including cloud credential extraction. This is a documented instance of adversaries operationalizing LLM agents as a post-exploitation tool in production environments.
+
+> **Take**: The pivot from "LLM-assisted" to "LLM-agentic" post-exploitation changes the speed and scale calculus for incident response — your detection and containment timelines were not built for automated credential harvesting driven by reasoning models.
+
+---
+
+### 4. [Hackers Used Meta's AI Support Bot to Seize Instagram Accounts](https://krebsonsecurity.com/2026/06/hackers-used-metas-ai-support-bot-to-seize-instagram-accounts/)
+**Source**: Krebs on Security
+
+Instructions circulating on Telegram showed how to manipulate Meta's AI support assistant into triggering account password resets, resulting in the compromise of high-profile Instagram accounts including the Obama White House and a U.S. Space Force senior NCO. The attack demonstrates prompt injection or social engineering against a production LLM-based support system with privileged account recovery capabilities.
+
+> **Take**: Any enterprise deploying an LLM support bot with backend write access to identity or account systems needs to treat that integration as a privileged access path — the same controls you'd put on a service account should apply to the model's tool permissions.
+
+---
+
+### 5. [The Surface You Test Is Not the Surface That Breaks](https://arxiv.org/abs/2605.30454)
 **Source**: arXiv cs.CR
 
-Researchers formalize the "Misattribution Gap" in multi-agent pipelines: memory-layer attacks that inject policy-formatted documents into shared vector stores produce behavioral drift (Semantic Norm Drift) that is structurally indistinguishable from model misalignment, causing defenders to remediate the wrong layer. This means existing model-focused monitoring and retraining responses are blind to an entire attack class operating below them in the stack.
+Researchers demonstrate that tool-augmented LLM agents have a second, under-evaluated injection surface in tool *descriptions* — not just tool outputs — that attackers can target with identical payloads while bypassing evaluations focused solely on tool output channels. Current benchmark ASR numbers are therefore structurally incomplete as a security signal.
 
-> **Take**: If your agentic incident response playbook treats all misbehavior as a model problem, you're almost certainly going to burn cycles retraining clean models while the poisoned memory store sits untouched — audit your shared vector stores as first-class attack surfaces.
+> **Take**: If your red team is only injecting through tool outputs, you're testing a fraction of the actual attack surface — tool descriptions are read every turn and attackers will pick the weakest channel, not the one you evaluated.
 
 ---
 
-### 2. [Prompt Overflow: What the Guardrail Inspects Is Not What the Model Infers](https://arxiv.org/abs/2605.23196)
+### 6. [Depth-Dependent Indirect Prompt Injection in Tool-Calling ReAct Agents](https://arxiv.org/abs/2605.30686)
 **Source**: arXiv cs.CR
 
-Guardrail models that truncate or segment overlength prompts before inspection create a structural mismatch: the safety checker evaluates a different token sequence than the LLM actually processes, enabling prompt injection payloads to survive screening by exploiting that gap. This effectively turns a fundamental input-handling constraint into a bypass primitive against the primary enterprise defense layer.
+New research maps three under-explored risk dimensions for indirect prompt injection in ReAct agents — injection depth within the observation loop, payload framing, and turn-budget sensitivity — against agents deployed for scheduling, file retrieval, and data access. Existing benchmarks evaluated at fixed injection positions miss significant attack variance across these dimensions.
 
-> **Take**: Guardrails built on truncation-based inspection are architecturally broken against adversarial long inputs — I'd treat any deployment where max context differs between the safety checker and the downstream model as an open vulnerability until proven otherwise.
-
----
-
-### 3. [Introducing RAMPART and Clarity: Open source tools to bring safety into Agent development workflow](https://www.microsoft.com/en-us/security/blog/2026/05/20/introducing-rampart-and-clarity-open-source-tools-to-bring-safety-into-agent-development-workflow/)
-**Source**: Microsoft Security
-
-Microsoft released RAMPART and Clarity as open-source tools targeting safety gaps in production AI agents that execute code, access email and CRM systems, and take actions across connected enterprise infrastructure — a direct acknowledgment that current development workflows ship agents without adequate security instrumentation. These aren't research prototypes; they're positioned as developer-workflow integrations.
-
-> **Take**: This is the one to actually evaluate this sprint — Microsoft shipping open-source tooling here signals they're seeing enough unsafe agent deployments in enterprise telemetry to justify the investment, and that's a threat model signal worth taking seriously.
+> **Take**: Enterprises deploying ReAct agents for anything touching data or scheduling need to pressure-test injection resilience across variable depth and budget conditions, not just the happy-path scenarios vendors demo.
 
 ---
 
-### 4. [PoisonForge: Task-Level Targeted Poisoning Benchmark for Instruction-Tuned LLMs](https://arxiv.org/abs/2605.23168)
+### 7. [What 2,000 Exposed Vibe-Coded Apps Reveal About the Limits of Most Security Stacks](https://thehackernews.com/2026/05/what-2000-exposed-vibe-coded-apps.html)
+**Source**: The Hacker News
+
+Analysis of 2,000 internet-exposed applications built with AI coding tools found employees are now shipping full applications wired into production systems — without security or IT involvement — representing a materially larger shadow AI risk than the prompt-leakage concerns of a year ago. The artifact has moved from a prompt to a deployed product, and the attack surface has moved with it.
+
+> **Take**: Shadow AI is no longer a data governance problem — it's a perimeter problem, and your AppSec program almost certainly has no visibility into what's getting deployed out of Cursor or Copilot Workspaces directly to cloud infrastructure.
+
+---
+
+### 8. [How we contain Claude across products](https://simonwillison.net/2026/May/30/how-we-contain-claude/#atom-everything)
+**Source**: Simon Willison
+
+Anthropic published detailed technical documentation of their sandboxing and containment architecture across Claude.ai, Claude Code, and Cowork — covering process sandboxes, VMs, and agent isolation mechanisms — which Simon Willison flags as unusually thorough compared to the industry norm of opaque security claims. This is a rare concrete reference architecture for LLM agent containment from a frontier lab.
+
+> **Take**: Read this as a benchmark, not just an Anthropic product explainer — if your own agentic deployments can't articulate equivalent containment properties, that gap is your risk.
+
+---
+
+### 9. [Strengthening Polymorphic Prompt Assembling: Dynamic Separator Generation Against Emerging Prompt Injection Attacks](https://arxiv.org/abs/2605.30534)
 **Source**: arXiv cs.CR
 
-PoisonForge demonstrates that an adversary can insert a small number of crafted instruction-response pairs into fine-tuning datasets to cause targeted behavioral corruption on specific task families across 12 open-weight models, while the model behaves normally elsewhere — a supply chain attack against the fine-tuning pipeline that evades broad behavioral testing. The benchmark parameterizes the attack along four dimensions, giving defenders a concrete threat model to test against.
+Researchers identify a "blast-radius vulnerability" in Polymorphic Prompt Assembling (PPA) — the static separator pool can be exploited once any separator leaks — and propose per-request dynamic separators using domain-separated SHA-256 digests keyed on timestamp, session ID, and cryptographic nonce to generate unique canary pairs. This closes a structural weakness in one of the more practical prompt injection mitigations for LLM agents.
 
-> **Take**: Any team fine-tuning on unvetted datasets — Hugging Face pulls, third-party instruction sets, contractor-curated data — should be running PoisonForge-class evaluations before promoting models to production; dataset provenance is now a security control, not just a quality concern.
+> **Take**: If your LLM agent pipeline is using PPA with a fixed separator pool, the static variant is now a known-weak configuration — the upgrade path here is well-defined and worth implementing before this becomes an active exploitation pattern.
 
 ---
 
-### 5. [What Does the Server See? Understanding Privacy Leakage from Large Language Models in Split Inference](https://arxiv.org/abs/2605.23158)
+### 10. [CacheProbe: Auditing Prompt Cache Isolation in Gateway APIs](https://arxiv.org/abs/2605.30613)
 **Source**: arXiv cs.CR
 
-Researchers introduce ActInv, an attack that reconstructs client-side input from intermediate activations transmitted during split inference LLM deployments — breaking the core privacy assumption that motivated the architecture in the first place. Enterprises deploying split inference to keep sensitive prompts off cloud infrastructure are exposed if the server-side component is compromised or adversarial.
+Researchers investigate whether OpenRouter's API gateway architecture introduces timing-based vulnerabilities in prompt caching implementations, building on prior ICML work showing that many LLM inference APIs are vulnerable to KV cache timing attacks and metadata disclosure. Gateway-level caching — increasingly common as a cost optimization — is a leakage surface that most enterprise API security reviews aren't accounting for.
 
-> **Take**: Split inference was being sold as a privacy-preserving compromise for regulated industries; ActInv demonstrates it's a threat model, not a control — factor this into any on-prem/cloud hybrid LLM deployment design.
-
----
-
-### 6. [CachePrune: Privacy-Aware and Fine-Grained KV Cache Sharing for Efficient LLM Inference](https://arxiv.org/abs/2605.23640)
-**Source**: arXiv cs.CR
-
-Cross-user KV cache sharing in LLM serving infrastructure introduces a side-channel that allows adversaries to infer other users' inputs by probing cache reuse patterns; CachePrune proposes fine-grained cache partitioning as a defense that preserves performance without disabling sharing entirely. This is a production infrastructure vulnerability, not a theoretical one — any multi-tenant LLM serving stack is potentially affected.
-
-> **Take**: If you're running a shared LLM inference layer across internal teams or customers, validate your serving framework's cache isolation model now — this side-channel is the kind of low-visibility data leak that won't show up in application logs.
-
----
-
-### 7. [Beyond Zero: Enterprise Security for the AI Era](https://arxiv.org/abs/2605.22985)
-**Source**: arXiv cs.CR
-
-This paper argues that zero trust's application-level trust boundary is insufficient for autonomous AI agents operating at machine speed across corporate data, and proposes "Beyond Zero" — a per-resource, per-method authorization model that combines static policy guarantees with dynamic AI-driven reasoning to shrink the blast radius of agent actions. The architecture targets the gap where agents inherit broad application-level permissions rather than operating under fine-grained, action-scoped controls.
-
-> **Take**: The framing is right even if the implementation is academic — the enterprise identity teams I'd worry about are the ones still thinking about agent permissions as a role assignment problem rather than an action authorization problem.
-
----
-
-### 8. [A Hacker Group Is Poisoning Open Source Code at an Unprecedented Scale](https://www.wired.com/story/teampcp-software-supply-chain-attack-spree-github/)
-**Source**: WIRED Security
-
-TeamPCP has executed a systematic supply chain poisoning campaign across hundreds of organizations through GitHub and multiple package ecosystems, with confirmed impact on a Microsoft-published Python SDK and AI/ML adjacent tooling in the dependency graph. The scale and cross-ecosystem reach represent a qualitative escalation from previous supply chain campaigns.
-
-> **Take**: With TeamPCP now confirmed hitting Python SDKs and AI tooling dependencies, any enterprise ingesting open-source packages into an AI/ML pipeline without hash-pinning and provenance verification is carrying unquantified exposure right now.
-
----
-
-### 9. [We hardened zizmor's GitHub Actions static analyzer](https://blog.trailofbits.com/2026/05/22/we-hardened-zizmors-github-actions-static-analyzer/)
-**Source**: Trail of Bits
-
-A `pull_request_target` misconfiguration in `aquasecurity/trivy-action` was exploited to exfiltrate secrets and backdoor LiteLLM on PyPI — a concrete AI tooling supply chain compromise via CI/CD pipeline — with Trail of Bits subsequently hardening zizmor to detect the class of misconfiguration that made it possible. LiteLLM is widely deployed in enterprise LLM routing infrastructure.
-
-> **Take**: If LiteLLM is in your stack and you haven't verified the integrity of your pinned version against the pre-compromise state, that's the first thing to check before anything else this week.
-
----
-
-### 10. [On AI Security](https://www.schneier.com/blog/archives/2026/05/on-ai-security.html)
-**Source**: Schneier on Security
-
-The referenced Berryville IML report argues that AI security cannot be validated by maximizing benchmark scores — because security and privacy are emergent systemic properties that benchmarks structurally cannot measure — and traces why 30 years of software security engineering methods don't transfer cleanly to ML systems. This is a foundational framing problem that affects how enterprises are currently auditing and certifying AI deployments.
-
-> **Take**: I'd send this to every team that's using benchmark pass rates as a proxy for production security assurance — the report articulates exactly why that practice creates false confidence, and it's a conversation worth forcing before the next audit cycle.
+> **Take**: If you're routing LLM traffic through a gateway that does prompt caching for latency or cost reasons, you need to verify that cache isolation is enforced per-tenant — this is the kind of side-channel that gets exploited quietly long before it gets patched.
 
 ---
 
