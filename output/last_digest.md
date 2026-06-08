@@ -1,95 +1,95 @@
-## Outwire | AI Security Digest — Week of June 01, 2026
-*Issue #8*
+## Outwire | AI Security Digest — Week of June 08, 2026
+*Issue #9*
 
 ---
 
-### 1. [OpenAI Codex Authentication Tokens Stolen in codexui-android npm Supply Chain Attack](https://thehackernews.com/2026/06/openai-codex-authentication-tokens.html)
-**Source**: The Hacker News
+### 1. [Securing CI/CD in an Agentic World: Claude Code GitHub Action Case](https://www.microsoft.com/en-us/security/blog/2026/06/05/securing-ci-cd-in-agentic-world-claude-code-github-action-case/)
+**Source**: Microsoft Security
 
-A malicious npm package named `codexui-android` — posing as a remote web UI for OpenAI Codex — has been stealing authentication tokens from developers, with 29,000 weekly downloads and the package still live on the registry. This is a direct LLM supply chain attack targeting developer environments with production AI access credentials.
+Microsoft Threat Intelligence identified a prompt injection pathway in the Claude Code GitHub Action that exposed workflow secrets under specific conditions — a concrete attack chain in a production AI agent with direct access to enterprise CI/CD pipelines. The responsible disclosure resulted in Anthropic mitigation, but the attack surface is structural: any AI agent with read access to untrusted content and implicit trust over secrets is vulnerable by design.
 
-> **Take**: The 29K weekly download count means this has enterprise blast radius — any team using Codex in CI/CD pipelines should audit their token exposure immediately and treat this as a credential rotation event, not just a package removal.
-
----
-
-### 2. [ChatGPhish Vulnerability Turns ChatGPT Web Summaries Into a Phishing Surface](https://thehackernews.com/2026/05/chatgphish-vulnerability-turns-chatgpt.html)
-**Source**: The Hacker News
-
-Permiso Security disclosed ChatGPhish, a technique exploiting ChatGPT's implicit trust in Markdown rendering to trigger prompt injections via embedded links and images, converting the AI's web summary responses into a phishing delivery mechanism. The chatgpt.com renderer trusts Markdown in a way that opens end users to credential harvesting without any traditional malicious attachment.
-
-> **Take**: This is the category of vulnerability that's going to keep compounding — every LLM feature that renders external content is a potential injection surface, and most enterprises haven't mapped those surfaces at all.
+> **Take**: This is the architecture problem nobody wants to admit — we're wiring LLMs into systems that hold our most sensitive credentials and calling the result "automation."
 
 ---
 
-### 3. [Attackers Use LLM Agent for Post-Exploitation After Marimo CVE-2026-39987 Exploit](https://thehackernews.com/2026/05/attackers-use-llm-agent-for-post.html)
-**Source**: The Hacker News
+### 2. [The Sorry State of Skill Distribution](https://blog.trailofbits.com/2026/06/03/the-sorry-state-of-skill-distribution/)
+**Source**: Trail of Bits
 
-A threat actor exploited CVE-2026-39987 in a publicly-accessible Marimo notebook to gain initial access, then deployed an LLM agent to automate post-compromise actions including cloud credential extraction. This is a documented instance of adversaries operationalizing LLM agents as a post-exploitation tool in production environments.
+Trail of Bits tested the emerging category of "skill scanners" — tools designed to detect malicious third-party skills in agent ecosystems — and bypassed them all, including scanners from ClawHub and Cisco, demonstrating that credential theft and data exfiltration via malicious skills remain largely undetected in public skill marketplaces. The supply chain for AI agents is in the same place npm was before the malicious package epidemic, except the payloads can also manipulate the agent's behavior.
 
-> **Take**: The pivot from "LLM-assisted" to "LLM-agentic" post-exploitation changes the speed and scale calculus for incident response — your detection and containment timelines were not built for automated credential harvesting driven by reasoning models.
-
----
-
-### 4. [Hackers Used Meta's AI Support Bot to Seize Instagram Accounts](https://krebsonsecurity.com/2026/06/hackers-used-metas-ai-support-bot-to-seize-instagram-accounts/)
-**Source**: Krebs on Security
-
-Instructions circulating on Telegram showed how to manipulate Meta's AI support assistant into triggering account password resets, resulting in the compromise of high-profile Instagram accounts including the Obama White House and a U.S. Space Force senior NCO. The attack demonstrates prompt injection or social engineering against a production LLM-based support system with privileged account recovery capabilities.
-
-> **Take**: Any enterprise deploying an LLM support bot with backend write access to identity or account systems needs to treat that integration as a privileged access path — the same controls you'd put on a service account should apply to the model's tool permissions.
+> **Take**: If your organization is deploying coding agents that consume third-party skills, you don't have a scanner problem — you have a trust boundary problem that scanners were never going to solve.
 
 ---
 
-### 5. [The Surface You Test Is Not the Surface That Breaks](https://arxiv.org/abs/2605.30454)
-**Source**: arXiv cs.CR
+### 3. [Updating the Taxonomy of Failure Modes in Agentic AI Systems: What a Year of Red Teaming Taught Us](https://www.microsoft.com/en-us/security/blog/2026/06/04/updating-taxonomy-failure-modes-agentic-ai-systems-year-red-teaming-taught-us/)
+**Source**: Microsoft Security
 
-Researchers demonstrate that tool-augmented LLM agents have a second, under-evaluated injection surface in tool *descriptions* — not just tool outputs — that attackers can target with identical payloads while bypassing evaluations focused solely on tool output channels. Current benchmark ASR numbers are therefore structurally incomplete as a security signal.
+Twelve months of red teaming against production agentic AI systems has produced seven newly identified failure modes — including supply chain compromise and goal hijacking — that didn't exist in prior taxonomies because the threat surface only materialized at scale this year. This is the closest thing to ground truth the industry has right now on what actually breaks in deployed AI agents.
 
-> **Take**: If your red team is only injecting through tool outputs, you're testing a fraction of the actual attack surface — tool descriptions are read every turn and attackers will pick the weakest channel, not the one you evaluated.
-
----
-
-### 6. [Depth-Dependent Indirect Prompt Injection in Tool-Calling ReAct Agents](https://arxiv.org/abs/2605.30686)
-**Source**: arXiv cs.CR
-
-New research maps three under-explored risk dimensions for indirect prompt injection in ReAct agents — injection depth within the observation loop, payload framing, and turn-budget sensitivity — against agents deployed for scheduling, file retrieval, and data access. Existing benchmarks evaluated at fixed injection positions miss significant attack variance across these dimensions.
-
-> **Take**: Enterprises deploying ReAct agents for anything touching data or scheduling need to pressure-test injection resilience across variable depth and budget conditions, not just the happy-path scenarios vendors demo.
+> **Take**: Pin this to your team's threat modeling process today — if your agentic AI risk model predates this taxonomy, it's already out of date.
 
 ---
 
-### 7. [What 2,000 Exposed Vibe-Coded Apps Reveal About the Limits of Most Security Stacks](https://thehackernews.com/2026/05/what-2000-exposed-vibe-coded-apps.html)
-**Source**: The Hacker News
+### 4. [AI Worm](https://www.schneier.com/blog/archives/2026/06/ai-worm.html)
+**Source**: Schneier on Security
 
-Analysis of 2,000 internet-exposed applications built with AI coding tools found employees are now shipping full applications wired into production systems — without security or IT involvement — representing a materially larger shadow AI risk than the prompt-leakage concerns of a year ago. The artifact has moved from a prompt to a deployed product, and the attack surface has moved with it.
+Researchers have prototyped an internet worm that carries its own LLM payload and executes it on compromised hosts — meaning the worm doesn't just propagate, it reasons about its environment and adapts post-compromise. This moves self-replicating malware from rule-based lateral movement into autonomous decision-making territory.
 
-> **Take**: Shadow AI is no longer a data governance problem — it's a perimeter problem, and your AppSec program almost certainly has no visibility into what's getting deployed out of Cursor or Copilot Workspaces directly to cloud infrastructure.
+> **Take**: The threat model shift here is significant: containment strategies built around predictable worm behavior will need rethinking when the worm can improvise.
 
 ---
 
-### 8. [How we contain Claude across products](https://simonwillison.net/2026/May/30/how-we-contain-claude/#atom-everything)
+### 5. [Adaptive, Agentic AI Worms Loom as Next Enterprise Threat](https://www.darkreading.com/cyber-risk/adaptive-agentic-ai-worms-enterprise-threat)
+**Source**: Dark Reading
+
+Security researchers are giving agentic AI worms a concrete timeline — within a year — describing malware that adapts to new environments, actively seeks vulnerabilities, and operates with a degree of autonomy that conventional detection and containment tools weren't designed to handle. The enterprise threat isn't just the propagation vector; it's the adaptive evasion on the back end.
+
+> **Take**: I'd treat "within a year" as already happening in adversarial research environments — your defensive posture needs to assume this capability exists now, not when it shows up in a breach report.
+
+---
+
+### 6. [Hackers Simply Asked Meta AI to Give Them Access to High-Profile Instagram Accounts. It Worked](https://simonwillison.net/2026/Jun/1/hackers-simply-asked-meta-ai/#atom-everything)
 **Source**: Simon Willison
 
-Anthropic published detailed technical documentation of their sandboxing and containment architecture across Claude.ai, Claude Code, and Cowork — covering process sandboxes, VMs, and agent isolation mechanisms — which Simon Willison flags as unusually thorough compared to the industry norm of opaque security claims. This is a rare concrete reference architecture for LLM agent containment from a frontier lab.
+Attackers socially engineered Meta's AI support bot into relinking target Instagram accounts to attacker-controlled email addresses by simply asserting ownership — no exploit required, just a natural language request the model accepted at face value. The attack worked at scale against high-profile accounts and is verified across multiple sources.
 
-> **Take**: Read this as a benchmark, not just an Anthropic product explainer — if your own agentic deployments can't articulate equivalent containment properties, that gap is your risk.
-
----
-
-### 9. [Strengthening Polymorphic Prompt Assembling: Dynamic Separator Generation Against Emerging Prompt Injection Attacks](https://arxiv.org/abs/2605.30534)
-**Source**: arXiv cs.CR
-
-Researchers identify a "blast-radius vulnerability" in Polymorphic Prompt Assembling (PPA) — the static separator pool can be exploited once any separator leaks — and propose per-request dynamic separators using domain-separated SHA-256 digests keyed on timestamp, session ID, and cryptographic nonce to generate unique canary pairs. This closes a structural weakness in one of the more practical prompt injection mitigations for LLM agents.
-
-> **Take**: If your LLM agent pipeline is using PPA with a fixed separator pool, the static variant is now a known-weak configuration — the upgrade path here is well-defined and worth implementing before this becomes an active exploitation pattern.
+> **Take**: This is what happens when you deploy an LLM as an authority-granting system without modeling the adversarial case — the failure mode was obvious in theory and catastrophic in practice.
 
 ---
 
-### 10. [CacheProbe: Auditing Prompt Cache Isolation in Gateway APIs](https://arxiv.org/abs/2605.30613)
+### 7. [MalSkillBench: A Runtime-Verified Benchmark of Malicious Agent Skills](https://arxiv.org/abs/2606.07131)
 **Source**: arXiv cs.CR
 
-Researchers investigate whether OpenRouter's API gateway architecture introduces timing-based vulnerabilities in prompt caching implementations, building on prior ICML work showing that many LLM inference APIs are vulnerable to KV cache timing attacks and metadata disclosure. Gateway-level caching — increasingly common as a cost optimization — is a leakage surface that most enterprise API security reviews aren't accounting for.
+Researchers present MalSkillBench, a runtime-verified ground-truth benchmark specifically targeting malicious skills in AI coding agents like Claude Code and Gemini CLI — filling a critical measurement gap given that skills bundle both executable code and agent-facing instructions in ways that defeat pure static analysis. This directly complements the Trail of Bits findings by establishing the evaluation infrastructure the field was missing.
 
-> **Take**: If you're routing LLM traffic through a gateway that does prompt caching for latency or cost reasons, you need to verify that cache isolation is enforced per-tenant — this is the kind of side-channel that gets exploited quietly long before it gets patched.
+> **Take**: The fact that we needed a benchmark to measure whether skill scanners work — and that scanners failed it — tells you everything about the maturity of this supply chain security space.
+
+---
+
+### 8. [New ChatGPT Lockdown Mode Limits Tools That Could Enable Data Exfiltration](https://thehackernews.com/2026/06/new-chatgpt-lockdown-mode-limits-tools.html)
+**Source**: The Hacker News
+
+OpenAI has shipped Lockdown Mode for ChatGPT, restricting outbound network requests to block the final-stage data exfiltration step in prompt injection attack chains — a direct response to a known, exploited vulnerability class affecting enterprise users handling sensitive data. The feature is now live across Free through Pro tiers and self-serve Business accounts.
+
+> **Take**: This is a meaningful defense-in-depth control, but it's worth noting that blocking exfiltration at the endpoint doesn't address the upstream injection — enable it, then keep hardening the input surface.
+
+---
+
+### 9. [Malicious Notifications Could Trick Google Gemini Users](https://www.darkreading.com/application-security/malicious-notifications-could-trick-google-gemini-users)
+**Source**: Dark Reading
+
+A prompt injection flaw in Google Gemini's voice assistant allowed attackers to embed malicious commands inside notifications, enabling the assistant to be weaponized for social engineering against the authenticated user. The vector is notable because it exploits a trusted ambient input channel rather than requiring the attacker to interact directly with the LLM.
+
+> **Take**: Notification-based injection is an underappreciated attack surface — any LLM that ingests ambient device context is exposed, and most enterprise AI assistants do exactly that.
+
+---
+
+### 10. [Subtle Injection for Ground-truth Inference of LLM Training Data](https://arxiv.org/abs/2606.06502)
+**Source**: arXiv cs.CR
+
+SIGIL introduces imperceptible canary sequences that, when embedded in protected text or code prior to scraping, produce statistically detectable behavioral signatures in any LLM subsequently trained on that data — giving content owners a forensic mechanism to prove unauthorized training dataset inclusion. The technique works on both prose and code, covering the two primary vectors through which enterprise IP ends up in third-party models.
+
+> **Take**: This is the IP protection primitive enterprises have been waiting for — I'd be piloting canary deployment on high-value internal documentation now, before the next vendor audit conversation.
 
 ---
 
