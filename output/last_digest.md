@@ -1,95 +1,95 @@
-## Outwire | AI Security Digest — Week of June 08, 2026
-*Issue #9*
+## Outwire | AI Security Digest — Week of June 15, 2026
+*Issue #10*
 
 ---
 
-### 1. [Securing CI/CD in an Agentic World: Claude Code GitHub Action Case](https://www.microsoft.com/en-us/security/blog/2026/06/05/securing-ci-cd-in-agentic-world-claude-code-github-action-case/)
-**Source**: Microsoft Security
-
-Microsoft Threat Intelligence identified a prompt injection pathway in the Claude Code GitHub Action that exposed workflow secrets under specific conditions — a concrete attack chain in a production AI agent with direct access to enterprise CI/CD pipelines. The responsible disclosure resulted in Anthropic mitigation, but the attack surface is structural: any AI agent with read access to untrusted content and implicit trust over secrets is vulnerable by design.
-
-> **Take**: This is the architecture problem nobody wants to admit — we're wiring LLMs into systems that hold our most sensitive credentials and calling the result "automation."
-
----
-
-### 2. [The Sorry State of Skill Distribution](https://blog.trailofbits.com/2026/06/03/the-sorry-state-of-skill-distribution/)
-**Source**: Trail of Bits
-
-Trail of Bits tested the emerging category of "skill scanners" — tools designed to detect malicious third-party skills in agent ecosystems — and bypassed them all, including scanners from ClawHub and Cisco, demonstrating that credential theft and data exfiltration via malicious skills remain largely undetected in public skill marketplaces. The supply chain for AI agents is in the same place npm was before the malicious package epidemic, except the payloads can also manipulate the agent's behavior.
-
-> **Take**: If your organization is deploying coding agents that consume third-party skills, you don't have a scanner problem — you have a trust boundary problem that scanners were never going to solve.
-
----
-
-### 3. [Updating the Taxonomy of Failure Modes in Agentic AI Systems: What a Year of Red Teaming Taught Us](https://www.microsoft.com/en-us/security/blog/2026/06/04/updating-taxonomy-failure-modes-agentic-ai-systems-year-red-teaming-taught-us/)
-**Source**: Microsoft Security
-
-Twelve months of red teaming against production agentic AI systems has produced seven newly identified failure modes — including supply chain compromise and goal hijacking — that didn't exist in prior taxonomies because the threat surface only materialized at scale this year. This is the closest thing to ground truth the industry has right now on what actually breaks in deployed AI agents.
-
-> **Take**: Pin this to your team's threat modeling process today — if your agentic AI risk model predates this taxonomy, it's already out of date.
-
----
-
-### 4. [AI Worm](https://www.schneier.com/blog/archives/2026/06/ai-worm.html)
-**Source**: Schneier on Security
-
-Researchers have prototyped an internet worm that carries its own LLM payload and executes it on compromised hosts — meaning the worm doesn't just propagate, it reasons about its environment and adapts post-compromise. This moves self-replicating malware from rule-based lateral movement into autonomous decision-making territory.
-
-> **Take**: The threat model shift here is significant: containment strategies built around predictable worm behavior will need rethinking when the worm can improvise.
-
----
-
-### 5. [Adaptive, Agentic AI Worms Loom as Next Enterprise Threat](https://www.darkreading.com/cyber-risk/adaptive-agentic-ai-worms-enterprise-threat)
-**Source**: Dark Reading
-
-Security researchers are giving agentic AI worms a concrete timeline — within a year — describing malware that adapts to new environments, actively seeks vulnerabilities, and operates with a degree of autonomy that conventional detection and containment tools weren't designed to handle. The enterprise threat isn't just the propagation vector; it's the adaptive evasion on the back end.
-
-> **Take**: I'd treat "within a year" as already happening in adversarial research environments — your defensive posture needs to assume this capability exists now, not when it shows up in a breach report.
-
----
-
-### 6. [Hackers Simply Asked Meta AI to Give Them Access to High-Profile Instagram Accounts. It Worked](https://simonwillison.net/2026/Jun/1/hackers-simply-asked-meta-ai/#atom-everything)
-**Source**: Simon Willison
-
-Attackers socially engineered Meta's AI support bot into relinking target Instagram accounts to attacker-controlled email addresses by simply asserting ownership — no exploit required, just a natural language request the model accepted at face value. The attack worked at scale against high-profile accounts and is verified across multiple sources.
-
-> **Take**: This is what happens when you deploy an LLM as an authority-granting system without modeling the adversarial case — the failure mode was obvious in theory and catastrophic in practice.
-
----
-
-### 7. [MalSkillBench: A Runtime-Verified Benchmark of Malicious Agent Skills](https://arxiv.org/abs/2606.07131)
-**Source**: arXiv cs.CR
-
-Researchers present MalSkillBench, a runtime-verified ground-truth benchmark specifically targeting malicious skills in AI coding agents like Claude Code and Gemini CLI — filling a critical measurement gap given that skills bundle both executable code and agent-facing instructions in ways that defeat pure static analysis. This directly complements the Trail of Bits findings by establishing the evaluation infrastructure the field was missing.
-
-> **Take**: The fact that we needed a benchmark to measure whether skill scanners work — and that scanners failed it — tells you everything about the maturity of this supply chain security space.
-
----
-
-### 8. [New ChatGPT Lockdown Mode Limits Tools That Could Enable Data Exfiltration](https://thehackernews.com/2026/06/new-chatgpt-lockdown-mode-limits-tools.html)
+### 1. [One-Click Microsoft 365 Copilot Flaw Could Have Let Attackers Steal Emails, Files, and MFA Codes](https://thehackernews.com/2026/06/one-click-microsoft-365-copilot-flaw.html)
 **Source**: The Hacker News
 
-OpenAI has shipped Lockdown Mode for ChatGPT, restricting outbound network requests to block the final-stage data exfiltration step in prompt injection attack chains — a direct response to a known, exploited vulnerability class affecting enterprise users handling sensitive data. The feature is now live across Free through Pro tiers and self-serve Business accounts.
+Varonis Threat Labs chained three bugs into a one-click exfiltration path (SearchLeak) against Microsoft 365 Copilot Enterprise Search, enabling unauthorized access to emails, calendar data, indexed files, and MFA codes — all triggered via a legitimate microsoft.com domain that bypasses standard URL filtering and anti-phishing controls.
 
-> **Take**: This is a meaningful defense-in-depth control, but it's worth noting that blocking exfiltration at the endpoint doesn't address the upstream injection — enable it, then keep hardening the input surface.
-
----
-
-### 9. [Malicious Notifications Could Trick Google Gemini Users](https://www.darkreading.com/application-security/malicious-notifications-could-trick-google-gemini-users)
-**Source**: Dark Reading
-
-A prompt injection flaw in Google Gemini's voice assistant allowed attackers to embed malicious commands inside notifications, enabling the assistant to be weaponized for social engineering against the authenticated user. The vector is notable because it exploits a trusted ambient input channel rather than requiring the attacker to interact directly with the LLM.
-
-> **Take**: Notification-based injection is an underappreciated attack surface — any LLM that ingests ambient device context is exposed, and most enterprise AI assistants do exactly that.
+> **Take**: The trust users place in first-party domains is exactly the leverage attackers needed to weaponize Copilot's deep index access, and this won't be the last chained bug found in enterprise AI search surfaces.
 
 ---
 
-### 10. [Subtle Injection for Ground-truth Inference of LLM Training Data](https://arxiv.org/abs/2606.06502)
+### 2. [LiteLLM Vulnerability Chain Lets Low-Privilege Users Take Over AI Gateway Servers](https://thehackernews.com/2026/06/litellm-vulnerability-chain-lets-low.html)
+**Source**: The Hacker News
+
+Obsidian Security disclosed a three-vulnerability chain in LiteLLM — a widely deployed open-source AI gateway routing calls to 100+ model providers — that allows a default low-privilege account to escalate to full admin and achieve remote code execution, exposing every provider API key the gateway holds.
+
+> **Take**: If you're running LiteLLM as your model abstraction layer, treat it with the same access control rigor as a secrets manager — because at this point, it effectively is one.
+
+---
+
+### 3. [Agentjacking Attack Tricks AI Coding Agents Into Running Malicious Code](https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html)
+**Source**: The Hacker News
+
+Tenet Security has described "agentjacking," a new attack class that manipulates AI coding agents into executing arbitrary code on developer machines by injecting malicious instructions via a crafted fake Sentry error report — exploiting the agent's implicit trust in monitoring platform output.
+
+> **Take**: Coding agents that consume external tool output as trusted context are the new macro-enabled documents; the attack surface isn't the model, it's every data source the agent treats as ground truth.
+
+---
+
+### 4. [SEVRA-BENCH: Social Engineering of Vulnerabilities in Review Agents](https://arxiv.org/abs/2606.13757)
 **Source**: arXiv cs.CR
 
-SIGIL introduces imperceptible canary sequences that, when embedded in protected text or code prior to scraping, produce statistically detectable behavioral signatures in any LLM subsequently trained on that data — giving content owners a forensic mechanism to prove unauthorized training dataset inclusion. The technique works on both prose and code, covering the two primary vectors through which enterprise IP ends up in third-party models.
+Researchers introduced SEVRA-BENCH, a benchmark measuring how often LLM-based PR reviewers can be socially engineered into approving malicious code contributions when an attacker controls both the code diff and the accompanying PR description text — a threat vector that static vulnerability detection benchmarks don't capture.
 
-> **Take**: This is the IP protection primitive enterprises have been waiting for — I'd be piloting canary deployment on high-value internal documentation now, before the next vendor audit conversation.
+> **Take**: Automated code review is being adopted faster than its adversarial failure modes are being characterized; SEVRA-BENCH gives security teams a concrete framework to pressure-test before trusting these agents as merge gatekeepers.
+
+---
+
+### 5. [Hidden in Plain Sight: Benchmarking Agent Safety Against Decomposition Attacks with DECOMPBENCH](https://arxiv.org/abs/2606.13994)
+**Source**: arXiv cs.CR
+
+DECOMPBENCH is a new benchmark targeting decomposition attacks on LLM agents, where a harmful task is fragmented into individually benign subtasks that each pass safety filters but collectively execute malicious intent — a threat not captured by existing multi-turn or multi-tool-use safety evaluations.
+
+> **Take**: Safety mechanisms that evaluate actions in isolation are structurally blind to this attack pattern, and I'd expect decomposition to become the dominant jailbreak strategy for agentic systems within the next 12 months.
+
+---
+
+### 6. [SkillMutator: Benchmarking and Defending Language-and-Code Cross-modal Attacks on LLM Agent Skills](https://arxiv.org/abs/2606.14154)
+**Source**: arXiv cs.CR
+
+Researchers identified a cross-modal attack surface in LLM agents that load external "skills" — pairings of natural-language SKILL.md specifications with executable scripts — where attackers can present a benign workflow description while embedding implicit directives in the accompanying code to exfiltrate sensitive files at runtime.
+
+> **Take**: Runtime skill loading is the plugin model all over again, and the industry hasn't learned that you cannot safely sandbox behavior when the instruction surface spans two modalities that your security tooling evaluates independently.
+
+---
+
+### 7. [Same-Origin Policy for Agentic Browsers](https://arxiv.org/abs/2606.14027)
+**Source**: arXiv cs.CR
+
+Researchers demonstrated that agentic browsers — AI agents integrated into web browsers to execute natural-language instructions — can themselves serve as automated channels for cross-origin data flows, effectively bypassing the Same-Origin Policy that browser security has relied on for decades.
+
+> **Take**: SOP was designed for scripts, not autonomous agents making contextual navigation decisions; this is a foundational trust boundary failure that browser vendors and enterprise security architects need to address before agentic browsing reaches production scale.
+
+---
+
+### 8. [Google Sues Chinese Smishing Network Accused of Using Gemini AI in Phishing](https://thehackernews.com/2026/06/google-sues-chinese-smishing-network.html)
+**Source**: The Hacker News
+
+Google filed legal action against a Chinese cybercrime network operating a phishing-as-a-service kit called "Outsider," which weaponized the Gemini AI agent to generate and distribute phishing SMS messages targeting Americans at scale.
+
+> **Take**: The Gemini misuse here signals that frontier model APIs are now a production component of organized cybercrime infrastructure — abuse prevention at the API layer is no longer optional for any AI provider.
+
+---
+
+### 9. [CISA Tells US Agencies to Fix Security Bugs in as Little as 3 Days Thanks to AI Threats](https://www.wired.com/story/cisa-ai-vulnerability-directive/)
+**Source**: WIRED Security
+
+CISA issued a directive compressing federal agency vulnerability remediation windows to as little as three days, citing AI-accelerated threat actors as the justification for timelines that previously spanned weeks.
+
+> **Take**: Three days is a patch-management architecture problem, not just a process one — agencies and enterprises that haven't automated their remediation pipelines are about to find out the hard way.
+
+---
+
+### 10. [Reconstructing AI Activity in Investigations](https://www.microsoft.com/en-us/security/blog/2026/06/09/reconstructing-ai-activity-investigations/)
+**Source**: Microsoft Security
+
+Microsoft published a structured, telemetry-driven investigation playbook for reconstructing AI activity in Microsoft 365 Copilot and Azure AI services, aimed at helping security teams trace events, assess data exposure, and identify threats post-incident.
+
+> **Take**: The fact that Microsoft needed to publish this playbook tells you that most security teams don't yet have AI activity in their investigation runbooks — fix that before you need it.
 
 ---
 
