@@ -1,95 +1,95 @@
-## Outwire | AI Security Digest — Week of June 15, 2026
-*Issue #10*
+## Outwire | AI Security Digest — Week of June 22, 2026
+*Issue #11*
 
 ---
 
-### 1. [One-Click Microsoft 365 Copilot Flaw Could Have Let Attackers Steal Emails, Files, and MFA Codes](https://thehackernews.com/2026/06/one-click-microsoft-365-copilot-flaw.html)
-**Source**: The Hacker News
-
-Varonis Threat Labs chained three bugs into a one-click exfiltration path (SearchLeak) against Microsoft 365 Copilot Enterprise Search, enabling unauthorized access to emails, calendar data, indexed files, and MFA codes — all triggered via a legitimate microsoft.com domain that bypasses standard URL filtering and anti-phishing controls.
-
-> **Take**: The trust users place in first-party domains is exactly the leverage attackers needed to weaponize Copilot's deep index access, and this won't be the last chained bug found in enterprise AI search surfaces.
-
----
-
-### 2. [LiteLLM Vulnerability Chain Lets Low-Privilege Users Take Over AI Gateway Servers](https://thehackernews.com/2026/06/litellm-vulnerability-chain-lets-low.html)
-**Source**: The Hacker News
-
-Obsidian Security disclosed a three-vulnerability chain in LiteLLM — a widely deployed open-source AI gateway routing calls to 100+ model providers — that allows a default low-privilege account to escalate to full admin and achieve remote code execution, exposing every provider API key the gateway holds.
-
-> **Take**: If you're running LiteLLM as your model abstraction layer, treat it with the same access control rigor as a secrets manager — because at this point, it effectively is one.
-
----
-
-### 3. [Agentjacking Attack Tricks AI Coding Agents Into Running Malicious Code](https://thehackernews.com/2026/06/agentjacking-attack-tricks-ai-coding.html)
-**Source**: The Hacker News
-
-Tenet Security has described "agentjacking," a new attack class that manipulates AI coding agents into executing arbitrary code on developer machines by injecting malicious instructions via a crafted fake Sentry error report — exploiting the agent's implicit trust in monitoring platform output.
-
-> **Take**: Coding agents that consume external tool output as trusted context are the new macro-enabled documents; the attack surface isn't the model, it's every data source the agent treats as ground truth.
-
----
-
-### 4. [SEVRA-BENCH: Social Engineering of Vulnerabilities in Review Agents](https://arxiv.org/abs/2606.13757)
-**Source**: arXiv cs.CR
-
-Researchers introduced SEVRA-BENCH, a benchmark measuring how often LLM-based PR reviewers can be socially engineered into approving malicious code contributions when an attacker controls both the code diff and the accompanying PR description text — a threat vector that static vulnerability detection benchmarks don't capture.
-
-> **Take**: Automated code review is being adopted faster than its adversarial failure modes are being characterized; SEVRA-BENCH gives security teams a concrete framework to pressure-test before trusting these agents as merge gatekeepers.
-
----
-
-### 5. [Hidden in Plain Sight: Benchmarking Agent Safety Against Decomposition Attacks with DECOMPBENCH](https://arxiv.org/abs/2606.13994)
-**Source**: arXiv cs.CR
-
-DECOMPBENCH is a new benchmark targeting decomposition attacks on LLM agents, where a harmful task is fragmented into individually benign subtasks that each pass safety filters but collectively execute malicious intent — a threat not captured by existing multi-turn or multi-tool-use safety evaluations.
-
-> **Take**: Safety mechanisms that evaluate actions in isolation are structurally blind to this attack pattern, and I'd expect decomposition to become the dominant jailbreak strategy for agentic systems within the next 12 months.
-
----
-
-### 6. [SkillMutator: Benchmarking and Defending Language-and-Code Cross-modal Attacks on LLM Agent Skills](https://arxiv.org/abs/2606.14154)
-**Source**: arXiv cs.CR
-
-Researchers identified a cross-modal attack surface in LLM agents that load external "skills" — pairings of natural-language SKILL.md specifications with executable scripts — where attackers can present a benign workflow description while embedding implicit directives in the accompanying code to exfiltrate sensitive files at runtime.
-
-> **Take**: Runtime skill loading is the plugin model all over again, and the industry hasn't learned that you cannot safely sandbox behavior when the instruction surface spans two modalities that your security tooling evaluates independently.
-
----
-
-### 7. [Same-Origin Policy for Agentic Browsers](https://arxiv.org/abs/2606.14027)
-**Source**: arXiv cs.CR
-
-Researchers demonstrated that agentic browsers — AI agents integrated into web browsers to execute natural-language instructions — can themselves serve as automated channels for cross-origin data flows, effectively bypassing the Same-Origin Policy that browser security has relied on for decades.
-
-> **Take**: SOP was designed for scripts, not autonomous agents making contextual navigation decisions; this is a foundational trust boundary failure that browser vendors and enterprise security architects need to address before agentic browsing reaches production scale.
-
----
-
-### 8. [Google Sues Chinese Smishing Network Accused of Using Gemini AI in Phishing](https://thehackernews.com/2026/06/google-sues-chinese-smishing-network.html)
-**Source**: The Hacker News
-
-Google filed legal action against a Chinese cybercrime network operating a phishing-as-a-service kit called "Outsider," which weaponized the Gemini AI agent to generate and distribute phishing SMS messages targeting Americans at scale.
-
-> **Take**: The Gemini misuse here signals that frontier model APIs are now a production component of organized cybercrime infrastructure — abuse prevention at the API layer is no longer optional for any AI provider.
-
----
-
-### 9. [CISA Tells US Agencies to Fix Security Bugs in as Little as 3 Days Thanks to AI Threats](https://www.wired.com/story/cisa-ai-vulnerability-directive/)
-**Source**: WIRED Security
-
-CISA issued a directive compressing federal agency vulnerability remediation windows to as little as three days, citing AI-accelerated threat actors as the justification for timelines that previously spanned weeks.
-
-> **Take**: Three days is a patch-management architecture problem, not just a process one — agencies and enterprises that haven't automated their remediation pipelines are about to find out the hard way.
-
----
-
-### 10. [Reconstructing AI Activity in Investigations](https://www.microsoft.com/en-us/security/blog/2026/06/09/reconstructing-ai-activity-investigations/)
+### 1. [AutoJack: How a single page can RCE the host running your AI agent](https://www.microsoft.com/en-us/security/blog/2026/06/18/autojack-single-page-rce-host-running-ai-agent/)
 **Source**: Microsoft Security
 
-Microsoft published a structured, telemetry-driven investigation playbook for reconstructing AI activity in Microsoft 365 Copilot and Azure AI services, aimed at helping security teams trace events, assess data exposure, and identify threats post-incident.
+A malicious webpage loaded by an AI browsing agent can exploit localhost trust assumptions, missing authentication, and unsafe parameter handling in AutoGen Studio's MCP WebSocket to spawn arbitrary processes on the host machine — no credentials or user interaction required after initial agent navigation. The attack chain exposes a structural problem: agents that browse untrusted content while retaining access to local services collapse the localhost security boundary entirely.
 
-> **Take**: The fact that Microsoft needed to publish this playbook tells you that most security teams don't yet have AI activity in their investigation runbooks — fix that before you need it.
+> **Take**: This is the clearest proof yet that "localhost = trusted" is a dead assumption the moment an AI agent touches the open web — audit every agent deployment for privileged local service exposure before someone weaponizes this pattern in the wild.
+
+---
+
+### 2. [AutoJack Attack Lets One Web Page Hijack AI Agent for Host Code Execution](https://thehackernews.com/2026/06/autojack-attack-lets-one-web-page.html)
+**Source**: The Hacker News
+
+Microsoft's AutoJack exploit chain demonstrates that steering a browsing agent to a single attacker-controlled page is sufficient to achieve RCE on the host through a privileged local service — zero credentials, zero additional user interaction. The vector is the agent itself, making perimeter and endpoint controls largely irrelevant once an agent is running.
+
+> **Take**: If your organization is running any AI browsing agents in production, treat the host machine's attack surface as equivalent to an internet-exposed system — sandbox accordingly.
+
+---
+
+### 3. [Researchers Detail DifyTap Flaws in Dify That Could Expose AI Chats Across Tenants](https://thehackernews.com/2026/06/researchers-detail-difytap-flaws-in.html)
+**Source**: The Hacker News
+
+Four vulnerabilities collectively named DifyTap in the widely-deployed open-source agentic workflow platform Dify (146,000+ GitHub stars) allow unauthenticated attackers to read AI conversations belonging to other tenants' applications. The authentication bypass in a multi-tenant AI platform is a critical data exposure risk for any enterprise running Dify in a shared or SaaS context.
+
+> **Take**: Multi-tenant AI platforms are becoming the new SaaS data leakage vector — DifyTap is the wake-up call to inventory every agentic platform in your stack and verify tenant isolation controls aren't assumed, they're enforced.
+
+---
+
+### 4. [Stop Your Legacy Infrastructure from Hijacking Your AI Agents](https://thehackernews.com/2026/06/stop-your-legacy-infrastructure-from.html)
+**Source**: The Hacker News
+
+Attackers are exploiting legacy infrastructure — systems with weak auth, outdated protocols, and implicit trust — as pivot points to hijack AI agents that interact with enterprise internal services. With 71% of organizations piloting AI agents, the attack surface created by pairing modern agents with decades-old infrastructure is expanding faster than security programs can track.
+
+> **Take**: The agent isn't the only thing you need to harden — every system an agent can reach inherits the agent's blast radius, and most legacy systems were never designed to be touched by autonomous processes.
+
+---
+
+### 5. [From package to postinstall payload: Inside the Mastra npm supply chain compromise by Sapphire Sleet](https://www.microsoft.com/en-us/security/blog/2026/06/17/postinstall-payload-inside-mastra-npm-supply-chain-compromise/)
+**Source**: Microsoft Security
+
+North Korean threat actor Sapphire Sleet poisoned an npm package in the Mastra AI agent framework ecosystem, embedding a hidden postinstall payload that infected 140+ downstream projects. The compromise targets developers actively building AI agent infrastructure, making this a supply chain attack with direct enterprise AI deployment implications.
+
+> **Take**: AI agent frameworks are becoming high-value supply chain targets precisely because they sit upstream of production AI systems — treat your AI development dependencies with the same scrutiny as your runtime dependencies.
+
+---
+
+### 6. [Embedding Forbidden Text in Spyware to Discourage AI Analysis](https://www.schneier.com/blog/archives/2026/06/embedding-forbidden-text-in-spyware-to-discourage-ai-analysis.html)
+**Source**: Schneier on Security
+
+A malware developer has begun embedding policy-triggering content about weapons of mass destruction inside JavaScript comment blocks — text that doesn't affect runtime execution but causes AI-based analysis tools to refuse or truncate analysis of the payload. This is the first documented in-the-wild adversarial technique specifically designed to blind AI-powered malware detection.
+
+> **Take**: If your SOC or malware pipeline relies on LLM-based triage, assume adversaries are already probing your model's refusal boundaries — content policy evasion is now a malware author's technique, not just a researcher's finding.
+
+---
+
+### 7. [Introducing Patch the Planet](https://blog.trailofbits.com/2026/06/22/introducing-patch-the-planet/)
+**Source**: Trail of Bits
+
+Trail of Bits and OpenAI's Daybreak initiative deployed GPT-5.5-Cyber alongside senior security engineers against 19 critical open-source projects, surfacing hundreds of bugs and producing 64 pull requests in a coordinated AI-augmented vulnerability discovery effort. The results make a concrete case for frontier models as force multipliers in offensive security research at scale.
+
+> **Take**: The more interesting signal here isn't the bug count — it's that this model-human pairing pattern will commoditize what previously required a full red team, and defenders need to be ready for adversaries to run the same playbook.
+
+---
+
+### 8. ['Dangerous' AI Models Are Coming No Matter What](https://www.wired.com/story/dangerous-ai-models-are-coming-no-matter-what/)
+**Source**: WIRED Security
+
+The US government's crackdown on Anthropic's Claude Fable 5 and Mythos 5 under export controls signals a policy recognition that advanced AI models with autonomous hacking capabilities represent a national security-tier threat — but the technical reality is that such capabilities are becoming baseline across the frontier model landscape. Regulatory interventions on specific models won't contain capabilities that are becoming commoditized.
+
+> **Take**: Export controls on specific models are fighting a rearguard action — the real enterprise security question is how you govern access to capable AI in your own environment when the capability baseline keeps rising.
+
+---
+
+### 9. [The Fable 5 Export Controls Harm US Cyber Defense](https://simonwillison.net/2026/Jun/16/fable-5-export-controls/#atom-everything)
+**Source**: Simon Willison
+
+The jailbreak that triggered export controls on Claude Fable 5 was, by Kate Moussouris's account, researchers asking the model to review and fix deliberately vulnerable code — conduct indistinguishable from legitimate defensive security work. The policy intervention is creating asymmetric harm: restricting defenders while doing little to constrain offensive use.
+
+> **Take**: When "review this code for security issues" is the jailbreak, the policy framework is badly miscalibrated — security teams should be paying close attention to how these controls propagate, because they will affect enterprise AI tooling.
+
+---
+
+### 10. [Quoting Sean Lynch](https://simonwillison.net/2026/Jun/19/sean-lynch/#atom-everything)
+**Source**: Simon Willison
+
+Sean Lynch's argument that MCP's real security value is isolating authentication flows outside the agent's context window — preventing credentials from being exfiltrated through prompt injection or context leakage — reframes MCP as primarily an auth boundary rather than a capability protocol. If auth lives in the context window, it's one injection away from compromise.
+
+> **Take**: I'd push every team deploying MCP to explicitly design auth handling to live outside the agent's context — this is a concrete architectural decision that significantly shrinks the prompt injection blast radius.
 
 ---
 
