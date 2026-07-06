@@ -1,95 +1,95 @@
-## Outwire | AI Security Digest — Week of June 29, 2026
-*Issue #12*
+## Outwire | AI Security Digest — Week of July 06, 2026
+*Issue #13*
 
 ---
 
-### 1. [On the Inseparability of Instructions and Data in Shared-Embedding Sequence Models](https://arxiv.org/abs/2606.27567)
-**Source**: arXiv cs.CR
+### 1. [SkillCloak Lets Malicious AI Agent Skills Evade Static Scanners with Self-Extracting Packing](https://thehackernews.com/2026/07/new-skillcloak-technique-lets-malicious.html)
+**Source**: The Hacker News
 
-Researchers formally prove that perfect prompt injection prevention is mathematically impossible in shared-embedding LLM architectures, defining a property called Semantic-Faithful Control (SFC) and demonstrating that any architecture lacking enforced control-data separation cannot guarantee it — covering refusal decisions, tool authorization, policy routing, and memory writes.
+Researchers at HKUST demonstrated that malicious skills for AI coding agents can evade every static scanner tested more than 90% of the time using self-extracting packing techniques — the same evasion playbook that plagued traditional AV for years, now landing squarely in the AI agent plugin ecosystem. The same team also built a runtime checker that recovers much of the detection gap, suggesting the defense exists but isn't deployed.
 
-> **Take**: This is the paper that ends the "we'll just patch it" conversation — every enterprise deploying LLM-integrated applications needs to architect assuming injection succeeds, not assuming it can be prevented.
-
----
-
-### 2. [Interesting Paper Exploring Prompt Injection](https://www.schneier.com/blog/archives/2026/06/interesting-paper-exploring-prompt-injection.html)
-**Source**: Schneier on Security
-
-New research shows LLMs recognize the *style* of text in role/instruction blocks — not just the structural tags — meaning role tags function as cognitive scaffolding that doesn't survive into the model's actual internal representations, and that this role confusion is mechanistically linked to prompt injection susceptibility.
-
-> **Take**: The implication here is that delimiter-hardening and system prompt engineering are theater; the attack surface is baked into how these models learn to read.
+> **Take**: The 90%+ bypass rate means any enterprise running AI coding agents with third-party skill marketplaces should treat those skills as untrusted executables and demand runtime behavioral analysis, not just scan-on-install.
 
 ---
 
-### 3. [Prompt Injection as Role Confusion](https://simonwillison.net/2026/Jun/22/prompt-injection-as-role-confusion/#atom-everything)
+### 2. [Fake Bug Report Hijacks AI Coding Agents at Scale](https://www.darkreading.com/cyber-risk/fake-bug-report-hijacks-ai-coding-agents)
+**Source**: Dark Reading
+
+"Agentjacking" uses crafted fake bug reports as the injection vector to hijack AI coding agents, exploiting the agent's inability to distinguish between data content and executable instructions — effectively turning your issue tracker into a command-and-control channel. At scale, this means any agent triaging GitHub issues or Jira tickets is a lateral movement surface.
+
+> **Take**: I'd treat every external content source an agent reads — issues, PRs, emails, docs — as a potential injection vector and architect explicit trust boundaries between the agent's instruction plane and its data plane before this becomes a breach postmortem item.
+
+---
+
+### 3. [Securing AI agents: When AI tools move from reading to acting](https://www.microsoft.com/en-us/security/blog/2026/06/30/securing-ai-agents-ai-tools-move-from-reading-acting/)
+**Source**: Microsoft Security
+
+MCP tool poisoning attacks manipulate tool descriptions to redirect trusted AI agents into unauthorized data exfiltration or destructive actions, effectively hijacking the agent's control plane through its own configuration layer. Microsoft's writeup covers detection signals, containment approaches, and prevention controls with enterprise deployment context.
+
+> **Take**: MCP tool descriptions are becoming the new `sudoers` file — if you're not treating them as security-critical configuration with change control and integrity verification, you're leaving an obvious escalation path unguarded.
+
+---
+
+### 4. ['Phantom Squatting': An Emerging AI-Driven Supply Chain Threat](https://www.darkreading.com/endpoint-security/phantom-squatting-ai-driven-supply-chain-threat)
+**Source**: Dark Reading
+
+LLMs consistently hallucinate plausible-but-nonexistent web domains for legitimate brands, and attackers can pre-register those hallucinated domains to intercept traffic from users or agents that act on the model's output. The attack is difficult to detect because the domains look credible and the hallucination behavior is deterministic enough to be weaponized predictably.
+
+> **Take**: This is the supply chain threat that scales passively — attackers don't need to compromise anything, just enumerate what popular LLMs hallucinate and register ahead of the curve, which makes this a monitoring problem as much as a model problem.
+
+---
+
+### 5. [Claude Helped a Hacker Find a Way to Issue Tickets to Almost Every US Music Festival](https://www.wired.com/story/claude-helped-a-hacker-find-a-way-to-issue-tickets-to-almost-every-us-music-festival/)
+**Source**: WIRED Security
+
+A security researcher used Claude Opus 4.7 to discover and exploit a critical vulnerability in Front Gate Tickets — the backend platform powering Lollapalooza, Bonnaroo, and hundreds of other US festivals — enabling arbitrary ticket issuance with no payment. This is a concrete, documented case of an advanced LLM dramatically compressing the time-to-exploit for a significant real-world vulnerability.
+
+> **Take**: The story isn't that Claude broke something — it's that AI-assisted exploitation now makes a solo researcher equivalent to a well-resourced team, and your threat model for critical business applications needs to account for that capability shift today.
+
+---
+
+### 6. [Attackers Seize Exposed AI Endpoints to Power Offensive Ops](https://www.darkreading.com/cloud-security/attackers-hijack-exposed-ai-endpoints-power-offensive-ops)
+**Source**: Dark Reading
+
+Threat actors are actively scanning for and exploiting unauthenticated AI inference endpoints — no credential theft required, just endpoint discovery — and repurposing that compute for offensive operations including malware generation and automated attack tooling. The barrier to entry is essentially a port scan.
+
+> **Take**: Exposed AI endpoints are the new exposed Elasticsearch instance — a recon problem masquerading as a configuration oversight, and you should be running continuous discovery against your own infrastructure before attackers do it for you.
+
+---
+
+### 7. [Better Models: Worse Tools](https://simonwillison.net/2026/Jul/4/better-models-worse-tools/#atom-everything)
 **Source**: Simon Willison
 
-The accessible companion writeup to the role confusion paper — Ye, Cui, and Hadfield-Menell demonstrate concretely how models fail to maintain privilege boundaries between system and user content, with attack mechanics presented clearly enough to operationalize.
+Claude Opus 4.8 — a frontier model — is observed hallucinating extra, invented fields in tool call schemas, causing agentic workflows to fail or loop when the downstream tool rejects the malformed invocation. The finding challenges the assumption that more capable models produce more reliable, schema-compliant outputs in structured agentic contexts.
 
-> **Take**: Read this alongside the arXiv proof above — together they make the strongest technical case yet that prompt injection is a structural property of current LLM design, not an implementation bug.
-
----
-
-### 4. [Anthropic's Fable 5 Model Jailbroken Within Days](https://www.schneier.com/blog/archives/2026/06/anthropics-fable-5-model-jailbroken-within-days.html)
-**Source**: Schneier on Security
-
-Anthropic's Fable 5 — positioned as a hardened, safety-guarded derivative of Mythos Preview specifically restricted from producing cyberattack assistance — had those guardrails bypassed within days of release, continuing the pattern of safety-marketed model variants failing in practice shortly after deployment.
-
-> **Take**: Every "safe" model variant announcement should now be treated as a countdown clock, not a security control — I'd stop counting on model-layer safety claims as any part of an enterprise control architecture.
+> **Take**: Schema hallucination in tool calls is a latent reliability and security issue for any agent that fails open — if your tool handler retries on schema mismatch rather than failing hard, you've created a behavior manipulation surface that gets worse as models get more "creative."
 
 ---
 
-### 5. [When the Aggregator Cheats: Data-Free Backdoors in Federated LLM-based QA Systems](https://arxiv.org/abs/2606.27511)
-**Source**: arXiv cs.CR
+### 8. [Anthropic's AI Finds Bugs. IBM Bets $5B It Can Fix Them.](https://www.darkreading.com/vulnerabilities-threats/anthropic-s-ai-finds-bugs-ibm-bets-5b-it-can-fix-them-)
+**Source**: Dark Reading
 
-Researchers demonstrate a novel attack where a malicious aggregator in a federated learning setup can implant backdoors into LLM-based QA systems without ever accessing raw client data, by colluding with a third-party vendor — targeting sensitive deployment domains including healthcare, legal, and mental health counseling.
+Anthropic's Mythos AI system is actively discovering vulnerabilities in open-source software, and IBM is committing $5B and 20,000 engineers through Project Lightwell to operationalize AI-driven remediation at scale across the OSS supply chain. The initiative surfaces a structural tension: AI can now find bugs faster than the ecosystem can patch them.
 
-> **Take**: Federated learning's privacy guarantee and its security guarantee are not the same thing, and enterprises treating FL as a trust boundary for model integrity are exposed to a supply chain attack they likely haven't modeled.
-
----
-
-### 6. [Robust Harmful Features Under Jailbreak Attacks: Mechanistic Evidence from Attention Head Specialization in Large Language Models](https://arxiv.org/abs/2606.28153)
-**Source**: arXiv cs.CR
-
-Mechanistic interpretability research finds that jailbreak attacks don't eliminate safety features wholesale — they selectively suppress specific early-layer attention heads (Adversarially Compromised Heads) while mid-layer Safety-Aligned Heads remain active even when attacks succeed, suggesting the attack surface is narrower and more targetable than previously understood.
-
-> **Take**: This is the kind of mechanistic evidence that should be driving next-generation jailbreak detection — monitoring ACH suppression patterns at inference time looks like a tractable detection signal worth pursuing.
+> **Take**: The real risk isn't that AI finds bugs slowly — it's the window between AI-discovered vulnerability and human-applied patch, which becomes a known-unknown that sophisticated attackers will race to exploit.
 
 ---
 
-### 7. [SHARD: cell-keyed residual splitting for alignment-resistant private dense retrieval](https://arxiv.org/abs/2606.27976)
-**Source**: arXiv cs.CR
+### 9. [GPT-5.5-Cyber built a zlib fuzzing lab in a day](https://blog.trailofbits.com/2026/07/02/field-reports-from-patch-the-planet/)
+**Source**: Trail of Bits
 
-Existing defenses for vector store privacy — including secret global rotations — are shown to be recoverable via orthogonal Procrustes alignment once an attacker has a modest number of known pairs; SHARD proposes cell-keyed residual splitting to break the single global geometry assumption that makes inversion attacks possible against RAG pipelines.
+Trail of Bits and OpenAI's Patch the Planet collaboration is deploying GPT-5.5-Cyber against real open-source codebases, with the model standing up a complete zlib fuzzing harness in a single day — a task that previously required significant engineer-hours. The stated goal is to front-run the coming flood of AI-generated bug reports before OSS maintainers are overwhelmed.
 
-> **Take**: If your enterprise RAG pipeline's threat model doesn't include vector store exfiltration and embedding inversion, it should — a leaked index hands back far more than most teams realize.
-
----
-
-### 8. [Agentic AI-Powered Re-Identification: An Emerging, Scalable Threat to Mobility Microdata Privacy](https://arxiv.org/abs/2606.27936)
-**Source**: arXiv cs.CR
-
-In a real-world feasibility study, researchers demonstrate that agentic AI can automate re-identification attacks against fine-grained location data at a scale that was previously impractical — converting what was historically a manual, analyst-intensive process into something scalable and accessible.
-
-> **Take**: The threat model for any enterprise handling mobility or location microdata just changed from "skilled nation-state analyst" to "anyone with API access and a prompt."
+> **Take**: When a model can instrument and fuzz a production library in a day, the asymmetry between AI-assisted offense and human-paced defense in OSS maintenance becomes an infrastructure-level risk — the maintainer burnout problem and the vulnerability discovery problem are now the same problem.
 
 ---
 
-### 9. [Incident Report: CVE-2026-LGTM](https://simonwillison.net/2026/Jun/26/incident-report/#atom-everything)
-**Source**: Simon Willison
+### 10. [North Korea-Linked npm Packages Mimic Rollup Polyfills to Steal Developer Secrets](https://thehackernews.com/2026/07/north-korea-linked-npm-packages-mimic-)
+**Source**: The Hacker News
 
-A hypothetical-but-technically-credible incident report traces a supply chain compromise through competing AI code review agents that enter a disagreement loop, generating 340 comments and $41,255 in inference spend before Finance kills the API keys — illustrating multi-agent trust boundary failures, cost-based denial of service, and the brittleness of automated AI gatekeeping in CI/CD pipelines.
+DPRK-affiliated threat actors published `rollup-packages-polyfill-core` and `rollup-runtime-polyfill-core` to npm, cloning the metadata, description, and repository structure of the legitimate `rollup-plugin-polyfill-node` to facilitate remote access and credential theft from developer environments. The targeting of build tooling is deliberate — developer machines are the highest-privilege entry point into most software supply chains.
 
-> **Take**: The fact that this is fictional makes it more useful, not less — it's the clearest articulation I've seen of what multi-agent failure modes look like in production, and your security architecture review should use it as a scenario.
-
----
-
-### 10. [ToolPrivacyBench: Benchmarking Purpose-Bound Privacy in Tool-Using LLM Agents](https://arxiv.org/abs/2606.28061)
-**Source**: arXiv cs.CR
-
-ToolPrivacyBench introduces a benchmark specifically targeting purpose-bound information flow across multi-tool LLM agent trajectories — filling a gap that existing function-calling and privacy benchmarks both miss by focusing on task completion or final responses rather than how sensitive data propagates across an agent's full execution path.
-
-> **Take**: Enterprises evaluating agentic AI vendors should be demanding this kind of trajectory-level privacy audit, not just point-in-time output review — the risk lives in the path, not the answer.
+> **Take**: Nation-state actors are now consistently targeting the developer toolchain specifically because it's the unmonitored path to production — any AI or security tooling your engineers are building with deserves the same dependency scrutiny you apply to production services.
 
 ---
 
