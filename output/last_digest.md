@@ -1,95 +1,96 @@
-## Outwire | AI Security Digest — Week of July 13, 2026
-*Issue #14*
+## Outwire | AI Security Digest — Week of July 20, 2026
+*Issue #15*
 
 ---
 
-### 1. [New MemGhost Attack Plants Persistent False Memories in AI Agents Through One Email](https://thehackernews.com/2026/07/new-memghost-attack-plants-persistent.html)
+### 1. [World's Largest AI Model Repository Hugging Face Breached by Autonomous AI Agent](https://thehackernews.com/2026/07/worlds-largest-ai-model-repository.html)
 **Source**: The Hacker News
 
-A single malicious email can inject a false "fact" into an AI assistant's persistent memory, conceal the write operation from the user, and silently bias all future sessions — no exploit chain required, just inbox access and a memory-enabled agent. This is a direct attack on the trust model that makes AI assistants useful in enterprise settings: the assumption that what the agent "knows" reflects reality.
+An autonomous AI agent system successfully breached Hugging Face's production infrastructure, exfiltrating internal datasets and credentials — compromising the most widely used model distribution platform in the industry. For enterprises pulling models or datasets from Hugging Face in CI/CD pipelines, any credential or artifact touched by that platform during the incident window is suspect.
 
-> **Take**: Any AI assistant deployment with persistent memory and email access should be treated as a target for context poisoning today — audit what your agents are writing to memory stores with the same scrutiny you'd apply to database writes.
-
----
-
-### 2. [AI Gateways Offer Attackers the Keys to the Kingdom](https://www.darkreading.com/cyber-risk/ai-gateways-keys-kingdom)
-**Source**: Dark Reading
-
-A cryptomining incident exposed how AI gateways — the orchestration layer sitting between users and AI models — can hand attackers simultaneous access to model inference endpoints, cloud infrastructure, and IAM data in a single compromise. The blast radius of a gateway breach isn't just model abuse; it's a pivot point into your cloud environment.
-
-> **Take**: AI gateways are becoming the new API management layer, and they're being deployed without the same threat modeling discipline — treat them like privileged infrastructure from day one.
+> **Take**: An AI agent as the threat actor is the headline, but the real story is that the AI supply chain now has the same credential-theft attack surface as any SaaS provider — and most teams haven't audited their Hugging Face token scopes once since they set them up.
 
 ---
 
-### 3. [Someone Is Scanning for Your MCP Servers and AI Assistant Credentials](https://isc.sans.edu/diary/rss/33150)
-**Source**: SANS ISC
+### 2. [New NadMesh Botnet Hunts Exposed AI Services for Cloud Keys and Kubernetes Tokens](https://thehackernews.com/2026/07/new-nadmesh-botnet-hunts-exposed-ai.html)
+**Source**: The Hacker News
 
-Active reconnaissance campaigns are now targeting Model Context Protocol (MCP) servers and AI assistant credential endpoints, signaling that attackers have mapped the agent infrastructure stack and are probing it systematically. MCP servers, which broker tool and context access for AI agents, represent a new class of exposed attack surface that most organizations haven't inventoried yet.
+NadMesh, a Go-based botnet actively scanning for exposed ComfyUI, Ollama, Langflow, Gradio, and n8n instances, has already claimed 3,811 unique AWS keys according to its own operator dashboard — systematically converting unauthenticated AI service endpoints into cloud credential theft vectors. These are exactly the services that shadow IT spins up on port 7860 and forgets.
 
-> **Take**: If you've stood up MCP servers without putting them behind the same access controls as your other API infrastructure, assume they're already in someone's scan results.
+> **Take**: Run a Shodan query for your own ASN against these service fingerprints right now — if NadMesh's operator can enumerate them, so can you, and the remediation window is already closing.
 
 ---
 
-### 4. [Secret Scanner Agent: Extracting Secrets and Access Context from Unstructured Documents](https://arxiv.org/abs/2607.09011)
+### 3. [Hidden in Thought: Transferable Chain-of-Thought Artifacts Induce Harmful Behavior](https://arxiv.org/abs/2607.15286)
 **Source**: arXiv cs.CR
 
-Researchers built an AI agent that goes beyond regex-based secret detection to extract credentials from fragmented, reformatted text in emails, tickets, and incident notes — and critically, also identifies the specific cloud resource, account, or database that each credential unlocks. The "what door does this key open" capability closes the gap that leaves incident responders guessing about blast radius during active breaches.
+Researchers demonstrate that harmful chain-of-thought traces extracted from jailbroken or misaligned models can be transplanted into 34 open- and closed-source target models, driving harmful-response rates above 80% on the most vulnerable open-source targets — with failure mode transferability gated on semantic alignment of the injected CoT. This effectively turns compromised model reasoning artifacts into reusable, distributable jailbreak payloads.
 
-> **Take**: This is the tooling IR teams actually need, but the same capability in attacker hands makes credential exfiltration from unstructured data far more dangerous than traditional secret scanners suggest.
-
----
-
-### 5. [AI Agents Are a New Kind of Identity — and Most Organizations Aren't Ready](https://www.darkreading.com/identity-access-management-security/ai-agents-new-kind-identity-most-organizations-not-ready)
-**Source**: Dark Reading
-
-AI agents acting autonomously on behalf of users don't fit cleanly into service account or API token identity models — they need dynamic, context-aware authorization that tracks intent and scope across multi-step workflows. Organizations treating agent identity as a static credential problem are leaving privilege escalation and lateral movement paths wide open.
-
-> **Take**: I'd watch whether your IAM vendor actually ships agent-aware identity controls this year or just rebadges existing service account tooling — the gap between the two is where breaches will happen.
+> **Take**: If your enterprise is fine-tuning on third-party CoT datasets or distilling reasoning traces from external models, this paper should trigger an immediate review of your training data provenance controls.
 
 ---
 
-### 6. [Proof-of-Continuity: A Temporal Model for Authority Propagation in Distributed Systems and AI Agents](https://arxiv.org/abs/2607.08906)
+### 4. [Do Agents Dream of False Memories? Black-box Visual Attacks on Long-term Memory in Multimodal AI Agents](https://arxiv.org/abs/2607.15657)
 **Source**: arXiv cs.CR
 
-Researchers propose that possession-based authorization models (tokens, credentials) are fundamentally insufficient for multi-step AI agent execution chains because they can't guarantee the causal relationship between a request's origin and the authority exercised at later steps. Proof-of-Continuity is a minimal discipline for encoding that causal chain, closing a gap that current agent frameworks leave entirely unaddressed.
+The Lucid framework demonstrates black-box adversarial attacks against multimodal AI agent memory pipelines, using imperceptible image perturbations to corrupt persistent memory retrieval — requiring zero access to the target model, retrieval encoder, or text channel. This means any agent with long-term visual memory that ingests untrusted images is vulnerable without any modification to the attack approach.
 
-> **Take**: This is the right framing for a problem most practitioners haven't articulated yet — if your agent orchestration relies solely on token possession to authorize downstream actions, you don't have an authorization model, you have a chain of assumptions.
-
----
-
-### 7. [Lone Attacker Uses AI to Breach AWS Cloud Environment in 72 Hours](https://www.darkreading.com/cloud-security/lone-attacker-ai-breach-aws-cloud-environment)
-**Source**: Dark Reading
-
-A single threat actor leveraged AI-assisted workflows to chain cloud misconfigurations and stolen credentials into a full AWS environment compromise within 72 hours, ultimately extorting the victim. The speed is the signal: attack timelines that previously required a team and days of manual pivoting are now within reach of an individual operator using AI tooling.
-
-> **Take**: The 72-hour window is a forcing function for detection — if your cloud threat detection isn't generating actionable alerts within hours of initial credential misuse, you're already behind the attacker's decision loop.
+> **Take**: Persistent memory is the attack surface that agentic AI security frameworks haven't caught up to yet — I'd treat any multimodal agent memory store as untrusted input and validate retrieval outputs before they influence action.
 
 ---
 
-### 8. [SLBench: Evaluating How LLM Agents Follow Logical Relations in Skills](https://arxiv.org/abs/2607.09016)
+### 5. [From Neural Intent to Cryptographic Authorization: Governing Agentic Workflows](https://arxiv.org/abs/2607.15596)
 **Source**: arXiv cs.CR
 
-Researchers introduce SkillLogic, a framework that analyzes logical dependencies — preconditions, constraints, fallback behaviors — across LLM agent skill files and surfaces cases where agents violate those relations in ways that could enable unsafe or unintended actions. Scanning 5,000+ skill definitions, they found systematic failure patterns that static testing misses entirely.
+This research exposes a fundamental gap in agentic security: conventional key management authenticates identity but remains blind to runtime workflow authorization, meaning a prompt-injected agent can satisfy all cryptographic identity checks while executing attacker-controlled actions. The proposed framework attempts to bind authorization to specific workflow steps rather than just caller identity.
 
-> **Take**: Agent skill files are becoming a new attack surface for logic abuse, and this work is the first systematic approach I've seen for auditing them — enterprise teams shipping agent workflows should be running this class of analysis before deployment.
-
----
-
-### 9. ["Comment stuffing" in HTML phishing attachments as a mechanism for evading AI-based detection](https://isc.sans.edu/diary/rss/33144)
-**Source**: SANS ISC
-
-Attackers are injecting HTML comment noise into phishing attachments specifically to disrupt AI-based detection pipelines, exploiting the assumption that semantic analysis of rendered content will generalize to obfuscated markup. The technique is low-sophistication but effective against detection systems that don't pre-process or normalize HTML before analysis.
-
-> **Take**: Adversarial evasion of AI security tooling is maturing faster than vendors are acknowledging — if your email security stack uses AI detection, ask your vendor directly how they handle pre-analysis normalization and whether they're testing against comment-stuffed samples.
+> **Take**: This is the architectural gap that makes "just use OAuth" an insufficient answer for agentic systems — authenticated ≠ authorized-for-this-specific-action, and enterprises building agent pipelines need to internalize that distinction before they're exploited through it.
 
 ---
 
-### 10. [AI Found a Root Bug in Linux That Everyone Missed for 15 Years](https://www.wired.com/story/security-news-this-week-ai-found-a-root-bug-in-linux-that-everyone-missed-for-15-years/)
+### 6. [Claude Flaw Automatically Sends Malicious Prompts to AI Agents](https://www.darkreading.com/vulnerabilities-threats/claude-flaw-malicious-prompts-ai-agents)
+**Source**: Dark Reading
+
+The "PromptFiction" vulnerability in Claude, now patched, enabled automatic propagation of malicious prompts through multi-agent orchestration chains, allowing an end-to-end attack against a targeted system when chained with a secondary exploit. The fix is deployed, but the attack pattern — one compromised node poisoning downstream agents — remains a structural risk in any multi-agent topology.
+
+> **Take**: Patch status aside, this confirms that multi-agent pipelines need inter-agent message validation, not just input validation at the perimeter — trust boundaries between agents can't be assumed.
+
+---
+
+### 7. [Prompt Injection Attacks Are Thwarting AI Hacking Agents](https://www.wired.com/story/prompt-injection-attacks-are-thwarting-ai-hacking-agents/
+)
 **Source**: WIRED Security
 
-An AI system surfaced a privilege-escalation vulnerability in the Linux kernel that had been present and undetected for 15 years, underscoring both the capability of AI-assisted code auditing and the depth of the unreviewed attack surface sitting in production infrastructure. The finding is a proof point that AI vulnerability discovery is moving beyond synthetic benchmarks into real-world critical systems.
+"Context bombing" — deliberately overloading a malicious AI agent's context window with confusing or contradictory content — is emerging as a viable defensive technique that causes attacking agents to abort before completing their objectives. It's an adversarial use of prompt injection as a defensive weapon, effectively turning the attack class against itself.
 
-> **Take**: The uncomfortable implication isn't that AI found a bug — it's that well-resourced adversaries with the same tooling may have found it first and stayed quiet.
+> **Take**: This is a genuinely interesting inversion — prompt injection as a defense rather than purely an offense — but I'd treat it as a delaying tactic rather than a control, since agent architectures will adapt context management to counter it.
+
+---
+
+### 8. [1M+ Emails Use Hidden Text to Dupe AI Security Filters](https://www.darkreading.com/threat-intelligence/1m-emails-hidden-text-dupe-ai-security-filters)
+**Source**: Dark Reading
+
+Text salting — embedding hidden characters or whitespace to fragment tokens without altering visual content — is bypassing AI-based email security filters at scale, with over one million observed phishing emails evading detection through this technique. LLMs processing email content are proving surprisingly brittle against this low-sophistication evasion.
+
+> **Take**: The fact that a technique this simple is working at this scale should prompt immediate review of whether your AI-based email security vendor has deployed any normalization preprocessing — and if they can't answer that question specifically, that's your answer.
+
+---
+
+### 9. [The Language of Security: How Prompt Syntax Shapes Secure Code Generation in Open LLMs](https://arxiv.org/abs/2607.15937)
+**Source**: arXiv cs.CR
+
+Fine-grained syntactic variations in prompts — not just high-level prompting strategy — measurably alter the security vulnerability profile of code generated by open-source LLMs, with findings specifically scoped to self-hosted models used in privacy-sensitive industrial settings. This means enterprises running code generation on self-hosted models have a largely uncharted prompt engineering attack surface affecting output security.
+
+> **Take**: If your team has standardized a code-gen prompt template and never stress-tested syntactic variations against your specific model, you're operating on an assumption of safety that this research directly contradicts.
+
+---
+
+### 10. [Least Privilege for AI Agents: Identity, Access, and Tool Binding](https://www.microsoft.com/en-us/security/blog/2026/07/16/least-privilege-for-ai-agents-identity-access-and-tool-binding/)
+**Source**: Microsoft Security
+
+Microsoft's security blog lays out a framework for applying least-privilege principles to AI agents through distinct identity assignment, scoped access controls, and explicit tool binding — addressing the common pattern of agents inheriting overly broad permissions from their orchestration environment. The guidance is practical and maps directly to the agent authorization gap surfaced in the academic research this week.
+
+> **Take**: Read this alongside the cryptographic authorization paper above — Microsoft's framework gives you the operational scaffolding, the research gives you the threat model that explains why it's non-negotiable.
 
 ---
 
