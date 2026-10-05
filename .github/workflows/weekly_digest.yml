@@ -2,8 +2,9 @@ name: Weekly AI Security Digest
 
 on:
   schedule:
-    - cron: "0 14 * * 1" # Every Monday at 6 AM PST (14:00 UTC)
-  workflow_dispatch: # Manual trigger for testing
+    - cron: "7 14 * * 1"  # Monday 6:07 AM PST (14:07 UTC) — off-peak scheduler window
+    - cron: "37 15 * * 1" # Monday 7:37 AM PST — retry if primary was dropped
+  workflow_dispatch: # Manual trigger always runs
 
 permissions:
   contents: write
@@ -16,19 +17,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check if digest already generated today
+        id: check
+        if: github.event_name == 'schedule'
+        run: |
+          LAST_COMMIT_DATE=$(git log -1 --format=%ad --date=short -- state/seen_articles.json)
+          TODAY=$(date -u +%F)
+          if [ "$LAST_COMMIT_DATE" = "$TODAY" ]; then
+            echo "Digest already generated today ($LAST_COMMIT_DATE). Skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: astral-sh/setup-uv@v5
+        if: steps.check.outputs.skip != 'true'
         with:
           python-version: "3.12"
 
       - name: Install dependencies
+        if: steps.check.outputs.skip != 'true'
         run: uv sync
 
       - name: Generate digest
+        if: steps.check.outputs.skip != 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: uv run python -m outwire.main --dry-run
 
       - name: Commit digest and state
+        if: steps.check.outputs.skip != 'true'
         run: |
           git config user.name "outwire-bot"
           git config user.email "actions@github.com"
