@@ -7,7 +7,13 @@ from pathlib import Path
 import structlog
 
 from outwire.utils.config import Config
-from outwire.utils.state import get_last_issue_number, get_seen_ids, save_state
+from outwire.utils.state import (
+    current_week_key,
+    get_last_issue_number,
+    get_seen_ids,
+    resolve_issue_number,
+    save_state,
+)
 
 log = structlog.get_logger()
 
@@ -44,10 +50,12 @@ def run(cfg: Config, publish: bool = False, no_llm: bool = False, reuse_last: bo
     from outwire.collector.rss import collect_all
 
     seen_ids = get_seen_ids()
-    last_issue = get_last_issue_number()
-    # --reuse-last: CI already incremented and saved the issue number during generation,
-    # so use last_issue directly. Fresh generation increments by 1.
-    issue_number = last_issue if reuse_last else last_issue + 1
+    issue_week = current_week_key()
+    # --reuse-last republishes the cached digest, so it keeps the number that
+    # was stored alongside it. Fresh generation is week-keyed: every run in the
+    # same calendar week resolves to the same number, so retries and
+    # workflow_dispatch can never double-increment the sequence.
+    issue_number = get_last_issue_number() if reuse_last else resolve_issue_number(issue_week)
     week = _week_date()
 
     log.info("pipeline_start", issue=issue_number, week=week, dry_run=cfg.dry_run, reuse_last=reuse_last)
@@ -102,7 +110,7 @@ def run(cfg: Config, publish: bool = False, no_llm: bool = False, reuse_last: bo
 
     # Save state after every successful generation (not just after publish)
     new_ids = [a.article.id for a in scored]
-    save_state(new_ids, issue_number)
+    save_state(new_ids, issue_number, issue_week)
 
     if cfg.dry_run or not publish:
         log.info("dry_run_complete", issue=issue_number)
