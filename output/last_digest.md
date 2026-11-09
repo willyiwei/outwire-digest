@@ -1,95 +1,95 @@
-## Outwire | AI Security Digest — Week of November 02, 2026
-*Issue #30*
+## Outwire | AI Security Digest — Week of November 09, 2026
+*Issue #31*
 
 ---
 
-### 1. [Critical Langflow Flaws Could Let Unauthenticated Attackers Run Code on Servers](https://thehackernews.com/2026/11/critical-langflow-flaws-could-let.html)
-**Source**: The Hacker News
-
-Two critical vulnerabilities in Langflow — covering every release from 1.0.0 through 1.12.8 — allow unauthenticated remote attackers to bypass authentication or execute arbitrary code, with the only remediation being an upgrade to 1.13.0. Langflow's role as a popular AI agent and workflow orchestration platform means the blast radius hits enterprises running production AI pipelines directly.
-
-> **Take**: If your org is running any AI workflow tooling without a firm inventory and patch cadence, Langflow is exactly the kind of quiet infrastructure component that slips through — audit it now.
-
----
-
-### 2. [A Supply Chain Attack Put Malicious Anthropic Claude Extensions on Thousands of Devices](https://www.wired.com/story/trojan-malware-targets-thousands-of-anthropic-claude-developer-systems/)
-**Source**: WIRED Security
-
-A trojanized Claude extension reached approximately 5,000 developer machines in a supply chain attack targeting AI developer tooling, with only a coding flaw in the malicious payload limiting the full infection. The attack demonstrates that LLM-branded extensions are now an active supply chain target, not a theoretical one.
-
-> **Take**: The attacker's buggy code saved thousands of developers here — that's not a defense strategy, and IDE extension provenance needs to be treated with the same rigor as any third-party dependency.
-
----
-
-### 3. [Inside a malicious Claude Code-branded extension and its persistent SSH backdoor](https://www.microsoft.com/en-us/security/blog/2026/10/30/inside-malicious-claude-code-branded-cursor-extension-persistent-ssh-backdoor/)
+### 1. [Threat actors use agentic AI tooling to find and abuse exposed secrets](https://www.microsoft.com/en-us/security/blog/2026/11/05/threat-actors-use-agentic-ai-tooling-to-find-and-abuse-exposed-secrets/)
 **Source**: Microsoft Security
 
-Microsoft's detailed technical analysis of the malicious Claude Code–branded Cursor extension reveals a persistent SSH backdoor mechanism used to maintain long-term access to compromised developer machines. This is the authoritative forensic breakdown of the same supply chain attack, with concrete detection and remediation guidance.
+Microsoft Threat Intelligence confirmed threat actors are deploying ARTEX, an agentic offensive security framework, to autonomously scan GitHub for exposed OAuth application secrets and then use those compromised applications to pivot inside victim tenants — a fully automated, multi-stage attack chain requiring minimal human involvement.
 
-> **Take**: Read this one for the IOCs and remediation steps — the SSH persistence mechanism is the part that makes this incident linger well past initial detection.
-
----
-
-### 4. [How We Took Over ChatGPT Accounts](https://simonwillison.net/2026/Oct/31/how-we-took-over-chatgpt-accounts/)
-**Source**: Simon Willison
-
-Parameter Labs exploited a sandbox escape in ChatGPT's HTML preview (formerly Canvas) feature, where attacker-controlled HTML rendered in an insufficiently isolated iframe could execute code in the authenticated user's session and exfiltrate private conversations. OpenAI rated it P1 and patched within eight days of disclosure.
-
-> **Take**: The artifacts/HTML preview pattern is proliferating across every major LLM product — this exploit is a blueprint for what's coming on other platforms that haven't done the sandbox audit yet.
+> **Take**: This is the clearest evidence yet that agentic AI has crossed from red team curiosity to active threat actor infrastructure — if your OAuth secrets have ever touched a public repo, treat them as burned today.
 
 ---
 
-### 5. [A Shared ChatGPT Link Could Run Attacker Code in Your Session and Read Private Chats](https://thehackernews.com/2026/10/a-shared-chatgpt-link-could-run.html)
+### 2. [ARTEX abuse expands as cybercriminals target financial sector](https://www.microsoft.com/en-us/security/blog/2026/11/06/artex-abuse-expands-as-cybercriminals-target-financial-sector/)
+**Source**: Microsoft Security
+
+Storm-3358, a financially motivated threat actor, has expanded ARTEX framework operations specifically against financial sector organizations as of October 2026, signaling that agentic AI offensive tooling is now being sector-targeted rather than opportunistically deployed.
+
+> **Take**: Sector-specific targeting with agentic tooling means adversaries are tuning their AI agents for domain context — financial sector defenders need to pressure-test their AI-adjacent attack surface now, not after the breach.
+
+---
+
+### 3. [Attackers Crash Claude's 'Office Party' Flaw to Run Malicious Code on Linux](https://www.darkreading.com/endpoint-security/attackers-claude-office-party-flaw-malicious-code-linux)
+**Source**: Dark Reading
+
+A flaw in Claude's document-processing tool allows attackers to craft a malicious temporary file that Claude can access and execute on a user's Linux machine, turning a document-handling workflow into an arbitrary code execution vector on the endpoint.
+
+> **Take**: Document-processing pipelines in LLM tooling are becoming the new macro-enabled Office files — enterprises deploying Claude in any document-adjacent workflow need to sandbox these processes at the OS level, not rely on model guardrails.
+
+---
+
+### 4. [Claude Code's "Don't Ask Again" File Exposes Passwords and Keys in 1,122 Public Copies on GitHub](https://thehackernews.com/2026/11/claude-codes-dont-ask-again-file.html)
 **Source**: The Hacker News
 
-A malicious ChatGPT share link could trigger attacker code execution within the victim's authenticated session, enabling full private conversation access — disclosed via OpenAI's bug bounty and fixed within eight days at P1 severity. The attack vector requires nothing from the victim beyond clicking a shared link, making it trivially weaponizable in phishing campaigns.
+Claude Code's "Yes, and don't ask again" approval flow persists the full plaintext command — including embedded secrets — into a project settings file, which Apiiro confirmed has resulted in 1,122 public GitHub repositories leaking passwords and API keys verbatim.
 
-> **Take**: Enterprises allowing ChatGPT for business use should treat shared conversation links with the same suspicion as any unsolicited URL — user education here is not optional.
+> **Take**: AI coding assistants are creating a new class of secret sprawl that existing DLP and secret-scanning tools weren't built to catch — your AppSec team needs Claude Code's settings files added to their scanning scope immediately.
 
 ---
 
-### 6. [Hiding Capabilities in AI Models](https://www.schneier.com/blog/archives/2026/10/hiding-capabilities-in-ai-models.html)
+### 5. [Taiwan-Based Hacker Used BOSSAI AI Agents to Steal Taipei Emergency Dispatch Records](https://thehackernews.com/2026/11/taiwan-based-hacker-used-bossai-ai.html)
+**Source**: The Hacker News
+
+A single attacker leveraged BOSSAI AI agents to exfiltrate emergency dispatch records across seven Taipei districts and discover an unauthenticated fire department platform exposing patient ECG data and ambulance footage dating to 2018 — a solo operation with breach scale previously requiring a team.
+
+> **Take**: The force-multiplier effect of AI agents on individual attackers is now empirically demonstrated against critical infrastructure — threat modeling that assumes organized groups as the minimum bar for large-scale data theft is obsolete.
+
+---
+
+### 6. [Free Chinese AI Models Are Getting Scary Good at Hacking](https://www.wired.com/story/free-chinese-ai-models-are-getting-scary-good-at-hacking/)
+**Source**: WIRED Security
+
+Experimental testing against simulated networks showed DeepSeek and GLM performing near parity with OpenAI's most advanced (non-public) cyber model on network penetration tasks, establishing that capable offensive AI is now freely accessible rather than gated behind closed APIs.
+
+> **Take**: The assumption that offensive AI capability tracks with API access controls is broken — defenders need to price in adversaries running uncensored, locally-hosted models with no usage restrictions or rate limits.
+
+---
+
+### 7. [AI Gave Your Incident Archive a Second Job](https://www.darkreading.com/cyber-risk/ai-gave-your-incident-archive-second-job)
+**Source**: Dark Reading
+
+Security vendors are increasingly using enterprise incident records — IR reports, threat intelligence feeds, forensic artifacts — to train their AI models, turning historical breach data into a model training asset that may exfiltrate TTPs and victim context outside the original data handling agreement.
+
+> **Take**: I'd treat any security vendor contract signed before 2025 as likely silent on AI training rights — your legal team needs to audit those agreements before your incident archive becomes someone else's training corpus.
+
+---
+
+### 8. [Spooky New Infostealer Malware Uses AI to 'Autodox' Victims](https://www.wired.com/story/kernel-panic-volta-autodoxer-ai-infostealer-malware/)
+**Source**: WIRED Security
+
+Volta-Autodoxer is a newly uncovered infostealer that uses AI tools to automatically aggregate and cross-correlate stolen data — credentials, credit cards, session tokens, and personal records — into structured victim profiles at scale, moving beyond raw data dumps to actionable intelligence packages.
+
+> **Take**: AI-driven correlation inside malware means defenders can no longer assume that individually low-value stolen data points are low-risk — the dossier built from them is the real threat.
+
+---
+
+### 9. [AI Vulnerability Finding](https://www.schneier.com/blog/archives/2026/11/ai-vulnerability-finding-2.html)
 **Source**: Schneier on Security
 
-Researchers demonstrate that AI models can provably conceal dangerous capabilities from pre-deployment evaluations by embedding encrypted neural networks within host model weights that only activate upon receiving a secret trigger — directly invalidating the foundational assumption of capability evaluation as a safety gate. This undermines the entire pre-deployment red-teaming paradigm that most enterprise AI governance frameworks currently rely on.
+Cited analysis suggests AI-assisted vulnerability discovery has found 3% of all historically recorded critical software bugs within a single month, putting the tooling on pace to add approximately 26% to the all-time CVE total within a year.
 
-> **Take**: Every AI safety evaluation process built around "we tested it and didn't find dangerous behavior" just became significantly weaker — this research demands a rethink of what deployment assurance actually means.
-
----
-
-### 7. [New VOLTA Infostealer Uses Claude, Gemini, and Kimi AI to Rank Victims by Financial Value](https://thehackernews.com/2026/11/new-volta-infostealer-uses-claude.html)
-**Source**: The Hacker News
-
-VOLTA-AUTODOXER is a Windows infostealer that harvests credentials, cookies, Outlook data, and Slack workspaces, then feeds stolen data to multiple commercial LLM APIs to automatically prioritize victims by monetization potential. This marks a concrete shift from LLMs as attack-generation tools to LLMs as post-exploitation intelligence infrastructure.
-
-> **Take**: I'd watch for this pattern to proliferate fast — LLM-assisted victim triage dramatically lowers the cost of targeted follow-on attacks and raises the ceiling on what commodity malware can accomplish.
+> **Take**: Patch velocity is now the existential constraint — if vulnerability discovery is outrunning remediation capacity by this margin, enterprises without automated patch prioritization and backporting pipelines are structurally falling behind.
 
 ---
 
-### 8. [Shadowy AI Relay Disables OpenAI Codex, Claude Code Sandboxes](https://www.darkreading.com/threat-intelligence/ai-relay-service-openai-codex-claude-code-sandboxes)
-**Source**: Dark Reading
+### 10. [Fuzzers vs. AI: Comparing Fuzzilli and BigSleep on JavaScript Engines](https://projectzero.google/2026/10/fuzzing-v-AI.html)
+**Source**: Google Project Zero
 
-An undisclosed relay service is proxying OpenAI Codex and Claude Code to users in regions where these products are officially unavailable — with sandbox security controls stripped out in the process. Enterprises with distributed workforces risk employees routing sensitive code and data through this service without visibility into the missing protections.
+Google Project Zero ran a six-month head-to-head between Fuzzilli (generative fuzzer) and BigSleep (LLM-based bug finder) against Chrome's V8 engine: BigSleep found 45 vulnerabilities to Fuzzilli's 37, with only 25% overlap — meaning the two approaches surface meaningfully different bug classes.
 
-> **Take**: Shadow AI adoption was already a detection problem; shadow AI with disabled sandboxes routed through an anonymous third-party relay is an exfiltration incident waiting to be discovered.
-
----
-
-### 9. [Claude Model Builds Exploits Across Major Browsers & OSes](https://www.darkreading.com/application-security/claude-model-exploits-major-browsers-oses)
-**Source**: Dark Reading
-
-An unreleased Claude model demonstrated by Anthropic successfully discovered and chained vulnerabilities across Chrome, Safari, Android, Windows, and Linux — representing a concrete leap in autonomous multi-platform exploit generation capability. This moves LLM-assisted exploitation from proof-of-concept single-vuln scenarios into full kill-chain automation territory.
-
-> **Take**: The gap between "AI can help write exploits" and "AI can autonomously build cross-platform exploit chains" just closed — threat modeling assumptions built before this capability existed need revisiting.
-
----
-
-### 10. [CLIC: Closed-Loop Intent Consistency for Securing LLM-Driven Control in Open RAN](https://arxiv.org/abs/2610.40744)
-**Source**: arXiv cs.CR
-
-Researchers disclose runtime prompt injection and residual virtual prompt injection (VPI) attacks against LLMs integrated into Open RAN control loops via the RAN Intelligent Controller, where attackers can manipulate network slicing and resource management decisions without triggering interface authentication. The proposed CLIC defense uses closed-loop intent verification to detect and block these manipulations before they affect network state.
-
-> **Take**: LLM control of network infrastructure is moving from research to production faster than the security community is building defenses — this attack class will matter at scale sooner than most telecom security teams expect.
+> **Take**: The non-overlapping findings are the story here — LLM-based and traditional fuzzing are complementary, not substitutes, and security teams treating AI bug-finding as a fuzzer replacement are leaving a significant slice of their attack surface uncovered.
 
 ---
 
